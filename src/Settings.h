@@ -1,0 +1,11 @@
+//
+// Created by Даниил on 11.04.2022.
+//
+
+#ifndef PSEUDO3DGAME_SETTINGS_H
+#define PSEUDO3DGAME_SETTINGS_H
+
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
+
+#endif //PSEUDO3DGAME_SETTINGS_H
