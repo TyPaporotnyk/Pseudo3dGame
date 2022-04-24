@@ -11,7 +11,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Pseudo 3D Game",
                             sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
-
+    window.setMouseCursorVisible(false);
 
     World world;
     world.addObject(Object2D({{300,100},{300,300},{500,100}}));

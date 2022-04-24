@@ -15,6 +15,7 @@ private:
     Vector position;
     float angle;
     float speed;
+    float maxDist;
 
     std::vector<Vector> collisionPoints;
 
@@ -26,7 +27,7 @@ private:
 
 public:
 
-    explicit Camera(World& world, Vector position = {}, float speed = 5, float angle = 0 );
+    explicit Camera(World& world, Vector position = {}, float speed = 5, float angle = 0, float maxDist = 700);
 
     void control(const sf::RenderWindow& window) noexcept;
     void draw(sf::RenderTarget& window) override;

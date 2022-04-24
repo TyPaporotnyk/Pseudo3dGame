@@ -6,14 +6,25 @@
 
 #include <cmath>
 
-Camera::Camera(World &world, Vector position, float speed, float angle) :
-world(world), position(position), speed(speed), angle(angle)
+Camera::Camera(World &world, Vector position, float speed, float angle, float maxDist) :
+world(world), position(position), speed(speed), angle(angle), maxDist(maxDist)
 {
 
 }
 
 void Camera::control(const sf::RenderWindow& window) noexcept
 {
+    // Mouse movement
+    double windowCenterX = round(window.getSize().x / 2);
+    double windowCenterY = round(window.getSize().y / 2);
+
+    double rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window.getSize().x);
+
+    angle = degCheck(angle + rotationHorizontal);
+
+    sf::Mouse::setPosition(sf::Vector2i(windowCenterX, windowCenterY), window);
+
+    // Keyboard check
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
         position.x += cosf(angle*M_PI/180) * 5;
         position.y -= sinf(angle*M_PI/180) * 5;
@@ -23,11 +34,16 @@ void Camera::control(const sf::RenderWindow& window) noexcept
         position.y += sinf(angle*M_PI/180) * 5;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        angle = degCheck(angle+2);
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        angle = degCheck(angle-2);
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+        position.x += cosf(degCheck(angle + 90)*M_PI/180) * 5;
+        position.y -= sinf(degCheck(angle + 90)*M_PI/180) * 5;
+    }
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+        position.x += cosf(degCheck(angle - 90)*M_PI/180) * 5;
+        position.y -= sinf(degCheck(angle - 90)*M_PI/180) * 5;
+    }
 
+    // Crossing rays
     crossing();
 }
 
@@ -39,8 +55,8 @@ void Camera::crossing() noexcept
         Vector direction = {cosf(degCheck(angle + a) * M_PI / 180),
                             -sinf(degCheck(angle + a) * M_PI / 180)};
 
-        float bestLen = 500;
-        Vector bestPoint = {position.x + direction.x * 500, position.y + direction.y * 500};
+        float bestLen = maxDist;
+        Vector bestPoint = {position.x + direction.x * maxDist, position.y + direction.y * maxDist};
 
         for(auto& object : world.getObjects())
         {
