@@ -11,25 +11,25 @@
 
 
 World::World(std::vector<Object2D> objects) :
-objects(objects)
+objects_(objects)
 {
 
 }
 
 void World::draw(sf::RenderTarget& window)
 {
-    for(auto& obj : objects )
+    for(auto& obj : objects_)
     obj.draw(window);
 }
 
 void World::addObject(Object2D object2D)
 {
-    objects.push_back(object2D);
+    objects_.push_back(object2D);
 }
 
 std::vector<Object2D> &World::getObjects()
 {
-    return objects;
+    return objects_;
 }
 
 Vector World::loadMapFromImage(std::string imgPath)
@@ -48,14 +48,14 @@ Vector World::loadMapFromImage(std::string imgPath)
             if((i == 1 && j == 1) || (i == 1 && j == CELL_HEIGHT-1) || (i == CELL_HEIGHT-1 && j == 1) || (i ==
             CELL_HEIGHT-1 && j == CELL_HEIGHT-1))
             {
-                objects.push_back(Circle({static_cast<float>(i),static_cast<float>(j)}));
+                objects_.push_back(Circle({static_cast<float>(i),static_cast<float>(j)}));
             }
 
             pixel = mapImage.getPixel(i,j);
 
             if(pixel == sf::Color(0,0,0))
             {
-                objects.push_back(Cube({static_cast<float>(i),static_cast<float>(j)}));
+                objects_.push_back(Cube({static_cast<float>(i),static_cast<float>(j)}));
             }
             else if(pixel == sf::Color(0,0,255))
             {

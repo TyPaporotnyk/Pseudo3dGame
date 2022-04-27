@@ -11,9 +11,6 @@
 
 class Circle :  public Object2D
 {
-private:
-
-
 public:
     Circle(Vector position, float radius = 1);
 

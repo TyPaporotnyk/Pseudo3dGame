@@ -14,8 +14,8 @@
 class Object2D : public virtual IDrawable
 {
 private:
-    std::vector<Vector>points;
-    Vector position;
+    std::vector<Vector>points_;
+    Vector position_;
 
 public:
     Object2D(Vector position = {}, std::vector<Vector> points = {});

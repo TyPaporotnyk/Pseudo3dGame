@@ -15,8 +15,7 @@
 class World : public virtual IDrawable
 {
 private:
-    std::vector<Object2D> objects;
-//    Object2D object;
+    std::vector<Object2D> objects_;
 
 public:
 

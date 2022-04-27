@@ -16,6 +16,15 @@ int main()
 
     sf::Clock clock;
 
+    sf::Font font;
+    font.loadFromFile(DATA_DIR + std::string("/fonts/font.ttf"));
+    sf::Text text;
+//    text.setOutlineThickness(1);
+//    text.setOutlineColor(sf::Color(0,0,0));
+    text.setFont(font);
+    text.setPosition(20,20);
+    text.setCharacterSize(24);
+
     World world;
     Vector playerPos = world.loadMapFromImage(DATA_DIR + std::string("/map1.png"));
 
@@ -26,7 +35,7 @@ int main()
         sf::Event event;
         while(window.pollEvent(event))
         {
-            if(event.type == sf::Event::Closed)
+            if(event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
             {
                 window.close();
             }
@@ -34,19 +43,27 @@ int main()
 
         window.clear(sf::Color(162,101,62));
 
-        camera.control(window);
+        camera.control(window, 1);
 
         auto textBuilder = std::ostringstream();
 
-        textBuilder << std::setw(2) << 1'000'000 / clock.restart().asMicroseconds() << " FPS";
-//        textBuilder << std::setw(3) << player.getOrigin() << " origin, ";
-
-        window.setTitle(textBuilder.str());
-
         camera.drawWorld(window);
-        camera.draw(window);
-        world.draw(window);
+        if(MAP_VIEW)
+        {
+            camera.draw(window);
+            world.draw(window);
+        }
+        else
+        {
+            auto textSceneBuilder = std::ostringstream();
+            textSceneBuilder << std::setw(2) << 1'000'000 / clock.restart().asMicroseconds() << " FPS" << std::endl;
+            textSceneBuilder << std::setprecision(3) << "x: " << camera.getPosition().x << ", ";
+            textSceneBuilder << std::setprecision(3) << "y: " << camera.getPosition().y << std::endl;
 
+            text.setString(textSceneBuilder.str());
+
+            window.draw(text);
+        }
         window.display();
     }
 

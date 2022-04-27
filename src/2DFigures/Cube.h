@@ -11,9 +11,9 @@
 
 class Cube : public Object2D
 {
-
 public:
     Cube(Vector position = {}, int scale = 1);
+
 };
 
 
