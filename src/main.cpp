@@ -32,7 +32,7 @@ int main()
             }
         }
 
-        window.clear(sf::Color::Black);
+        window.clear(sf::Color(162,101,62));
 
         camera.control(window);
 
@@ -43,6 +43,7 @@ int main()
 
         window.setTitle(textBuilder.str());
 
+        camera.drawWorld(window);
         camera.draw(window);
         world.draw(window);
 
