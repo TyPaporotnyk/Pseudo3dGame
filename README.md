@@ -1,7 +1,7 @@
 # Pseudo3DGame
 
 <p>
-    <img src="docs/scene1.png" width="auto"/>
+    <img src="docs/scene1.jpeg" width="auto"/>
 </p>
 
 # Requirements
