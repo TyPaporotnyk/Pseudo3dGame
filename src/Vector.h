@@ -18,9 +18,15 @@ struct Vector
     float abs();
     void normalize();
 
-    Vector operator +(const Vector v);
+    Vector operator +(Vector v);
+    Vector operator *(float n);
+    Vector operator *(Vector v);
 
-    Vector& operator +=(const Vector v);
+    Vector& operator +=(Vector v);
+    Vector& operator *=(Vector v);
+    Vector& operator *=(float n);
+
+
 };
 
 

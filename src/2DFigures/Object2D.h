@@ -15,9 +15,10 @@ class Object2D : public virtual IDrawable
 {
 private:
     std::vector<Vector>points;
+    Vector position;
 
 public:
-    Object2D(std::vector<Vector> points);
+    Object2D(Vector position = {}, std::vector<Vector> points = {});
 
     std::vector<Vector>& getNodes();
 

@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 
-#include "2DFigures/Object2D.h"
+#include <sstream>
+#include <iomanip>
 
 #include "Settings.h"
 #include "World.h"
@@ -13,9 +14,12 @@ int main()
     window.setFramerateLimit(60);
     window.setMouseCursorVisible(false);
 
+    sf::Clock clock;
+
     World world;
-    world.addObject(Object2D({{300,100},{300,300},{500,100}}));
-    Camera camera(world, {30,200}, 0);
+    Vector playerPos = world.loadMapFromImage(DATA_DIR + std::string("/map1.png"));
+
+    Camera camera(world, playerPos, 0.05);
 
     while(window.isOpen())
     {
@@ -32,9 +36,15 @@ int main()
 
         camera.control(window);
 
+        auto textBuilder = std::ostringstream();
+
+        textBuilder << std::setw(2) << 1'000'000 / clock.restart().asMicroseconds() << " FPS";
+//        textBuilder << std::setw(3) << player.getOrigin() << " origin, ";
+
+        window.setTitle(textBuilder.str());
+
         camera.draw(window);
         world.draw(window);
-
 
         window.display();
     }

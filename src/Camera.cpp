@@ -4,6 +4,8 @@
 
 #include "Camera.h"
 
+#include "Settings.h"
+
 #include <cmath>
 
 Camera::Camera(World &world, Vector position, float speed, float angle, float maxDist) :
@@ -26,21 +28,21 @@ void Camera::control(const sf::RenderWindow& window) noexcept
 
     // Keyboard check
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-        position.x += cosf(angle*M_PI/180) * 5;
-        position.y -= sinf(angle*M_PI/180) * 5;
+        position.x += cosf(angle*M_PI/180) * speed;
+        position.y -= sinf(angle*M_PI/180) * speed;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-        position.x -= cosf(angle*M_PI/180) * 5;
-        position.y += sinf(angle*M_PI/180) * 5;
+        position.x -= cosf(angle*M_PI/180) * speed;
+        position.y += sinf(angle*M_PI/180) * speed;
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-        position.x += cosf(degCheck(angle + 90)*M_PI/180) * 5;
-        position.y -= sinf(degCheck(angle + 90)*M_PI/180) * 5;
+        position.x += cosf(degCheck(angle + 90)*M_PI/180) * speed;
+        position.y -= sinf(degCheck(angle + 90)*M_PI/180) * speed;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-        position.x += cosf(degCheck(angle - 90)*M_PI/180) * 5;
-        position.y -= sinf(degCheck(angle - 90)*M_PI/180) * 5;
+        position.x += cosf(degCheck(angle - 90)*M_PI/180) * speed;
+        position.y -= sinf(degCheck(angle - 90)*M_PI/180) * speed;
     }
 
     // Crossing rays
@@ -50,10 +52,11 @@ void Camera::control(const sf::RenderWindow& window) noexcept
 void Camera::crossing() noexcept
 {
     collisionPoints.clear();
-    for (int a = -40; a < 41; a += 1)
+    for (int a = -45; a < 45; a += 1)
     {
-        Vector direction = {cosf(degCheck(angle + a) * M_PI / 180),
-                            -sinf(degCheck(angle + a) * M_PI / 180)};
+        Vector direction = {cosf(degCheck(angle - a) * M_PI / 180),
+                            -sinf(degCheck(angle - a) * M_PI / 180)};
+        direction.normalize();
 
         float bestLen = maxDist;
         Vector bestPoint = {position.x + direction.x * maxDist, position.y + direction.y * maxDist};
@@ -98,26 +101,27 @@ void Camera::crossing() noexcept
 
 void Camera::draw(sf::RenderTarget &window)
 {
-    sf::CircleShape circle(20);
-    circle.setPosition(position.x, position.y);
-    circle.setOutlineThickness(5);
-    circle.setFillColor(sf::Color(255, 228, 196));
+    sf::CircleShape circle(CELL_SCALE/3);
+    circle.setPosition(position.x * CELL_SCALE, position.y * CELL_SCALE);
+    circle.setOutlineThickness(2);
+    circle.setFillColor(sf::Color(255, 100, 196));
     circle.setOutlineColor(sf::Color(252, 248, 243));
 
-    sf::VertexArray rays;
     sf::ConvexShape triangle;
     triangle.setPointCount(collisionPoints.size()+2);
-    triangle.setPoint(0, {position.x + 20, position.y + 20});
+    triangle.setPoint(0, {(position.x * CELL_SCALE + CELL_SCALE/3),
+                          (position.y * CELL_SCALE + CELL_SCALE/3)});
 
     for(int i = 0; i < collisionPoints.size(); i++)
     {
-        triangle.setPoint(i+1, {collisionPoints[i].x, collisionPoints[i].y});
+        triangle.setPoint(i+1, {collisionPoints[i].x * CELL_SCALE, collisionPoints[i].y * CELL_SCALE});
     }
-    triangle.setPoint(collisionPoints.size()+1, {position.x + 10, position.y + 10});
+    triangle.setPoint(collisionPoints.size()+1, {(position.x * CELL_SCALE + CELL_SCALE/3),
+                                                 (position.y * CELL_SCALE + CELL_SCALE/3)});
 
     triangle.setFillColor(sf::Color::Black);
     triangle.setOutlineColor(sf::Color::White);
-    triangle.setOutlineThickness(5);
+    triangle.setOutlineThickness(3);
 
     window.draw(triangle);
     window.draw(circle);

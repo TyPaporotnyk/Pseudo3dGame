@@ -7,12 +7,13 @@
 
 #include "Object2D.h"
 
+#include "../Vector.h"
 
-class Cube : Object2D
+class Cube : public Object2D
 {
 
 public:
-
+    Cube(Vector position = {}, int scale = 1);
 };
 
 

@@ -9,6 +9,7 @@
 
 #include "2DFigures/Object2D.h"
 #include "IDrawble.h"
+#include "Vector.h"
 
 
 class World : public virtual IDrawable
@@ -23,6 +24,8 @@ public:
 
     void draw(sf::RenderTarget& window) override;
     void addObject(Object2D object2D);
+
+    Vector loadMapFromImage(std::string imgPath);
 
     std::vector<Object2D>& getObjects();
 
