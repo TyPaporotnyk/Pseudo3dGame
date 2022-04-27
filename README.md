@@ -1,6 +1,8 @@
-#Pseudo3DGame
+# Pseudo3DGame
 
-valera pidor
+<p>
+    <img src="docs/scene1.png" width="auto"/>
+</p>
 
 # Requirements
 * C++ 20
