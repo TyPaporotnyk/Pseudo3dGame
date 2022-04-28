@@ -17,10 +17,10 @@ world_(world), position_(position), speed_(speed), angle_(angle), maxDist_(maxDi
 void Camera::control(const sf::RenderWindow& window, float dTime) noexcept
 {
     // Mouse movement
-    double windowCenterX = round(window.getSize().x / 2);
-    double windowCenterY = round(window.getSize().y / 2);
+    float windowCenterX = round(window.getSize().x / 2);
+    float windowCenterY = round(window.getSize().y / 2);
 
-    double rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window
+    float rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window
             .getSize().x);
 
     angle_ = degCheck(angle_ + rotationHorizontal);
@@ -50,7 +50,7 @@ void Camera::control(const sf::RenderWindow& window, float dTime) noexcept
     crossing();
 }
 
-void Camera::crossing() noexcept
+void Camera::crossing()noexcept
 {
     collisionPoints_.clear();
     depths_.clear();
@@ -73,7 +73,7 @@ void Camera::crossing() noexcept
 
                 Vector rayDir = rayStart + direction;
 
-                double den = (wallPoint1.x - wallPoint2.x) * (rayStart.y - rayDir.y) -
+                float den = (wallPoint1.x - wallPoint2.x) * (rayStart.y - rayDir.y) -
                             (wallPoint1.y - wallPoint2.y) * (rayStart.x - rayDir.x);
 
                 if (den == 0)
@@ -81,9 +81,9 @@ void Camera::crossing() noexcept
                     continue;
                 }
 
-                double t = ((wallPoint1.x - rayStart.x) * (rayStart.y - rayDir.y) -
+                float t = ((wallPoint1.x - rayStart.x) * (rayStart.y - rayDir.y) -
                            (wallPoint1.y - rayStart.y) * (rayStart.x - rayDir.x)) / den;
-                double u = -((wallPoint1.x - wallPoint2.x) * (wallPoint1.y - rayStart.y) -
+                float u = -((wallPoint1.x - wallPoint2.x) * (wallPoint1.y - rayStart.y) -
                           (wallPoint1.y - wallPoint2.y) * (wallPoint1.x - rayStart.x)) / den;
 
                 if (t >= 0 && t <= 1 && u >= 0 )
@@ -104,7 +104,7 @@ void Camera::crossing() noexcept
     }
 }
 
-void Camera::draw(sf::RenderTarget &window)
+void Camera::draw(sf::RenderTarget &window) const
 {
     sf::CircleShape circle(CELL_SCALE/3);
     circle.setPosition(position_.x * CELL_SCALE, position_.y * CELL_SCALE);
@@ -132,28 +132,37 @@ void Camera::draw(sf::RenderTarget &window)
     window.draw(circle);
 }
 
-void Camera::drawWorld(sf::RenderTarget &window)
+void Camera::drawWorld(sf::RenderTarget &window) const noexcept
 {
-    float D = WINDOW_WIDTH / NUM_RAYS;
-    float H = 300;
-    float h;
+    sf::RectangleShape segment;
+    float segmentWidth = WINDOW_WIDTH / NUM_RAYS;
+    float segmentHeightProj = 300;
+    float segmentHeight;
 
-    sf::RectangleShape rec;
-    rec.setSize({WINDOW_WIDTH, WINDOW_HEIGHT/2});
-    rec.setFillColor(sf::Color(135,206,235));
-    window.draw(rec);
+    sf::RectangleShape sky;
+    sky.setSize({WINDOW_WIDTH, WINDOW_HEIGHT/2});
+    sky.setFillColor(sf::Color(135,206,235));
+
+    sf::RectangleShape floor;
+    floor.setSize({WINDOW_WIDTH, WINDOW_HEIGHT/2});
+    floor.setPosition(0,(WINDOW_HEIGHT/2));
+    floor.setFillColor(sf::Color(162,101,62));
+
+    window.draw(sky);
+    window.draw(floor);
 
     for(int i = 0; i < NUM_RAYS; i++)
     {
         if(depths_[i] >= maxDist_) continue;
 
-        h = D * H / depths_[i];
-        rec.setSize({D, h});
-        rec.setPosition(i*D, WINDOW_HEIGHT/2 - h/2);
-        rec.setFillColor(sf::Color(200-depths_[i]*(200/maxDist_),
+        segmentHeight = segmentWidth * segmentHeightProj / depths_[i];
+        segment.setSize({segmentWidth, segmentHeight});
+        segment.setPosition(i*segmentWidth, WINDOW_HEIGHT/2 - segmentHeight/2);
+
+        segment.setFillColor(sf::Color(200-depths_[i]*(200/maxDist_),
                                    200-depths_[i]*(200/maxDist_),
                                    200-depths_[i]*(200/maxDist_)));
-        window.draw(rec);
+        window.draw(segment);
     }
 }
 
@@ -162,7 +171,37 @@ Vector Camera::getPosition() const
     return position_;
 }
 
-float Camera::degCheck(float deg)
+float Camera::degCheck(float deg) noexcept
 {
     return static_cast<float>(fmod(360 + fmod(deg, 360), 360));
+}
+
+float Camera::getAngle() const
+{
+    return angle_;
+}
+
+float Camera::getSpeed() const
+{
+    return speed_;
+}
+
+float Camera::getMaxDist() const
+{
+    return maxDist_;
+}
+
+std::vector<Vector> &Camera::getCollisionPoints()
+{
+    return collisionPoints_;
+}
+
+std::vector<float> &Camera::getDepths()
+{
+    return depths_;
+}
+
+World &Camera::getWorld() const
+{
+    return world_;
 }
