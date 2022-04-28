@@ -1,8 +1,8 @@
 # Pseudo3DGame
 
-<p>
-    <img src="docs/scene1.jpeg" width="auto"/>
-</p>
+| 90 rays                                    | 400 rays                                      |
+| -------------------------------------------|-----------------------------------------------|
+| <img src="docs/90rays.jpeg" width="50%"/>  |  <img src="docs/400rays.jpeg" width="auto"/>  |
 
 # Requirements
 * C++ 20
@@ -15,3 +15,11 @@ cmake -B cmake-build -DCMAKE_BUILD_TYPE=Release
 cmake --build cmake-build
 cmake --build cmake-build --target release
 ```
+
+# Control
+| Action               | Control         |
+| ---------------------|-----------------|
+| Move                 | WASD keys       |
+| Rotation             | Mouse movement  |
+| Exit                 | Q key           |
+| Show or hide map     | M key           |

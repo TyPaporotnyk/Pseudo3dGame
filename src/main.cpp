@@ -12,26 +12,34 @@ int main()
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Pseudo 3D Game",
                             sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
-    window.setMouseCursorVisible(false);
 
     sf::Clock clock;
 
+    // Text init
     sf::Font font;
-    font.loadFromFile(DATA_DIR + std::string("/fonts/font.ttf"));
+    font.loadFromFile(DATA_DIR + std::string("/font/font.ttf"));
     sf::Text text;
-//    text.setOutlineThickness(1);
-//    text.setOutlineColor(sf::Color(0,0,0));
     text.setFont(font);
     text.setPosition(20,20);
     text.setCharacterSize(24);
 
+    // World and camera init
     World world;
     Vector playerPos = world.loadMapFromImage(DATA_DIR + std::string("/map1.png"));
 
     Camera camera(world, playerPos, 0.05);
 
+    bool mapView = true;
+
+    // Cursor init
+    window.setMouseCursorVisible(false);
+    sf::CircleShape cursor(5);
+    cursor.setPosition(round(window.getSize().x / 2) + 5, round(window.getSize().y / 2) + 5);
+
+
     while(window.isOpen())
     {
+        // Control
         sf::Event event;
         while(window.pollEvent(event))
         {
@@ -39,22 +47,29 @@ int main()
             {
                 window.close();
             }
+            if(event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+            {
+                mapView = !mapView;
+            }
         }
 
         window.clear(sf::Color(162,101,62));
 
+        // Calculation
         camera.control(window, 1);
 
-        auto textBuilder = std::ostringstream();
-
+        // Draw world
         camera.drawWorld(window);
-        if(MAP_VIEW)
+
+        if(mapView)
         {
+            // Draw map and camera
             camera.draw(window);
             world.draw(window);
         }
         else
         {
+            // Draw text
             auto textSceneBuilder = std::ostringstream();
             textSceneBuilder << std::setw(2) << 1'000'000 / clock.restart().asMicroseconds() << " FPS" << std::endl;
             textSceneBuilder << std::setprecision(3) << "x: " << camera.getPosition().x << ", ";
@@ -64,6 +79,10 @@ int main()
 
             window.draw(text);
         }
+
+        // Draw cursor
+        window.draw(cursor);
+
         window.display();
     }
 

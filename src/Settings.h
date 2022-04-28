@@ -5,7 +5,9 @@
 #ifndef PSEUDO3DGAME_SETTINGS_H
 #define PSEUDO3DGAME_SETTINGS_H
 
-#define WINDOW_WIDTH 1980
+#include <cmath>
+
+#define WINDOW_WIDTH 2000
 #define WINDOW_HEIGHT 1080
 
 #define CELL_SCALE 16
@@ -13,10 +15,8 @@
 #define CELL_WIDTH 20
 #define CELL_HEIGHT 20
 
-#define FOV 90
+#define FOV M_PI/3
 
-#define MAP_VIEW false
-
-#define NUM_RAYS 120
+#define NUM_RAYS 400
 
 #endif //PSEUDO3DGAME_SETTINGS_H

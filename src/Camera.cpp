@@ -20,7 +20,8 @@ void Camera::control(const sf::RenderWindow& window, float dTime) noexcept
     double windowCenterX = round(window.getSize().x / 2);
     double windowCenterY = round(window.getSize().y / 2);
 
-    double rotationHorizontal = round(FOV * (windowCenterX - sf::Mouse::getPosition(window).x) / window.getSize().x);
+    double rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window
+            .getSize().x);
 
     angle_ = degCheck(angle_ + rotationHorizontal);
 
@@ -37,12 +38,12 @@ void Camera::control(const sf::RenderWindow& window, float dTime) noexcept
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-        position_.x += cosf(degCheck(angle_ + FOV)*M_PI/180) * speed_ * dTime;
-        position_.y -= sinf(degCheck(angle_ + FOV)*M_PI/180) * speed_ * dTime;
+        position_.x += cosf(degCheck(angle_ + 90)*M_PI/180) * speed_ * dTime;
+        position_.y -= sinf(degCheck(angle_ + 90)*M_PI/180) * speed_ * dTime;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-        position_.x += cosf(degCheck(angle_ - FOV)*M_PI/180) * speed_ * dTime;
-        position_.y -= sinf(degCheck(angle_ - FOV)*M_PI/180) * speed_ * dTime;
+        position_.x += cosf(degCheck(angle_ - 90)*M_PI/180) * speed_ * dTime;
+        position_.y -= sinf(degCheck(angle_ - 90)*M_PI/180) * speed_ * dTime;
     }
 
     // Crossing rays
@@ -53,12 +54,10 @@ void Camera::crossing() noexcept
 {
     collisionPoints_.clear();
     depths_.clear();
-    for (float a = -FOV/2; a < FOV/2; a++)
+    float curAngle = ((360-angle_) * M_PI / 180) - FOV / 2;
+    for (float a = 0; a < NUM_RAYS; a++)
     {
-
-//        float ray_direction = angle_ + FOV * (floor(0.5f * WINDOW_WIDTH) - a) / (WINDOW_WIDTH - 1);
-        Vector direction = {cosf((angle_ - a) * M_PI / 180),
-                            -sinf((angle_ - a) * M_PI / 180)};
+        Vector direction = {cosf(curAngle), sinf(curAngle)};
         direction.normalize();
 
         float bestLen = maxDist_;
@@ -79,7 +78,6 @@ void Camera::crossing() noexcept
 
                 if (den == 0)
                 {
-//                    collisionPoints_.push_back(bestPoint);
                     continue;
                 }
 
@@ -101,6 +99,8 @@ void Camera::crossing() noexcept
         }
         collisionPoints_.push_back(bestPoint);
         depths_.push_back(bestLen);
+
+        curAngle += FOV / NUM_RAYS;
     }
 }
 
@@ -134,8 +134,8 @@ void Camera::draw(sf::RenderTarget &window)
 
 void Camera::drawWorld(sf::RenderTarget &window)
 {
-    float D = WINDOW_WIDTH / FOV;
-    float H = 50;
+    float D = WINDOW_WIDTH / NUM_RAYS;
+    float H = 300;
     float h;
 
     sf::RectangleShape rec;
@@ -143,15 +143,16 @@ void Camera::drawWorld(sf::RenderTarget &window)
     rec.setFillColor(sf::Color(135,206,235));
     window.draw(rec);
 
-    for(int i = 0; i < FOV; i++)
+    for(int i = 0; i < NUM_RAYS; i++)
     {
         if(depths_[i] >= maxDist_) continue;
+
         h = D * H / depths_[i];
         rec.setSize({D, h});
         rec.setPosition(i*D, WINDOW_HEIGHT/2 - h/2);
-        rec.setFillColor(sf::Color(255-depths_[i]*(255/maxDist_),
-                                   255-depths_[i]*(255/maxDist_),
-                                   255-depths_[i]*(255/maxDist_)));
+        rec.setFillColor(sf::Color(200-depths_[i]*(200/maxDist_),
+                                   200-depths_[i]*(200/maxDist_),
+                                   200-depths_[i]*(200/maxDist_)));
         window.draw(rec);
     }
 }
