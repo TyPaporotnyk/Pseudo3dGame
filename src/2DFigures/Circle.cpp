@@ -14,7 +14,7 @@ Circle::Circle(Vector position, float radius)
         float a = radius * cosf(i * M_PI / 180) + position.x;
         float b = radius * sinf(i * M_PI / 180) + position.y;
 
-        getNodes().emplace_back(a,b);
+        points_.emplace_back(a,b);
     }
 }
 

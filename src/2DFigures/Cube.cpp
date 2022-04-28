@@ -8,7 +8,7 @@ Cube::Cube(Vector position, int scale)
 : Object2D(position, {{0,0},{1,0},
                       {1,1},{0,1}})
 {
-    for(auto& v : getNodes())
+    for(auto& v : points_)
     {
         v *= scale;
     }

@@ -13,7 +13,7 @@
 
 class Object2D : public virtual IDrawable
 {
-private:
+protected:
     std::vector<Vector>points_;
     Vector position_;
 
