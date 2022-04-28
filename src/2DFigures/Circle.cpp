@@ -8,11 +8,17 @@
 
 Circle::Circle(Vector position, float radius)
 {
-    int p = 10;
+    float p = 10;
     for(float i = 0; i < 360; i+=p)
     {
         float a = radius * cosf(i * M_PI / 180) + position.x;
         float b = radius * sinf(i * M_PI / 180) + position.y;
-        getNodes().push_back({a,b});
+
+        getNodes().emplace_back(a,b);
     }
+}
+
+void Circle::draw(sf::RenderTarget &window) const
+{
+
 }

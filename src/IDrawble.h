@@ -9,7 +9,7 @@
 
 class IDrawable
 {
-    virtual void draw(sf::RenderTarget &window) = 0;
+    virtual void draw(sf::RenderTarget &window) const = 0;
 };
 
 #endif //PSEUDO3DGAME_IDRAWBLE_H

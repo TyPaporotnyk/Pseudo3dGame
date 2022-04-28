@@ -18,13 +18,14 @@ private:
     Vector position_;
 
 public:
-    Object2D(Vector position = {}, std::vector<Vector> points = {});
+    explicit Object2D(Vector position = {}, std::vector<Vector> points = {});
 
     std::vector<Vector>& getNodes();
 
-    void draw(sf::RenderTarget &window) override;
+    void draw(sf::RenderTarget &window) const override;
 
-
+    [[nodiscard]]const std::vector<Vector> &getPoints() const;
+    [[nodiscard]]const Vector &getPosition() const;
 };
 
 

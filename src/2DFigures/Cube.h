@@ -12,8 +12,9 @@
 class Cube : public Object2D
 {
 public:
-    Cube(Vector position = {}, int scale = 1);
+    explicit Cube(Vector position = {}, int scale = 1);
 
+    void draw(sf::RenderTarget &window) const override;
 };
 
 

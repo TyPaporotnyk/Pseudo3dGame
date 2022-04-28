@@ -12,8 +12,9 @@
 class Circle :  public Object2D
 {
 public:
-    Circle(Vector position, float radius = 1);
+    explicit Circle(Vector position = {}, float radius = 1);
 
+    void draw(sf::RenderTarget &window) const override;
 };
 
 

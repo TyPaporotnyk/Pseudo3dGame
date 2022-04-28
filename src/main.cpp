@@ -25,7 +25,9 @@ int main()
 
     // World and camera init
     World world;
-    Vector playerPos = world.loadMapFromImage(DATA_DIR + std::string("/map1.png"));
+
+    std::string path = DATA_DIR + std::string("/map1.png");
+    Vector playerPos = world.loadMapFromImage(path);
 
     Camera camera(world, playerPos, 0.05);
 
@@ -40,7 +42,7 @@ int main()
     while(window.isOpen())
     {
         // Control
-        sf::Event event;
+        sf::Event event = {};
         while(window.pollEvent(event))
         {
             if(event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
@@ -53,7 +55,7 @@ int main()
             }
         }
 
-        window.clear(sf::Color(162,101,62));
+        window.clear();
 
         // Calculation
         camera.control(window, 1);

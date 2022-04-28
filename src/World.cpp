@@ -4,40 +4,26 @@
 
 #include "World.h"
 
+#include <utility>
+
 #include "2DFigures/Cube.h"
 #include "2DFigures/Circle.h"
 
 #include "Settings.h"
 
 
-World::World(std::vector<Object2D> objects) :
-objects_(objects)
+World::World(std::vector<Object2D> objects) noexcept :
+objects_(std::move(objects))
 {
 
 }
 
-void World::draw(sf::RenderTarget& window)
-{
-    for(auto& obj : objects_)
-    obj.draw(window);
-}
-
-void World::addObject(Object2D object2D)
-{
-    objects_.push_back(object2D);
-}
-
-std::vector<Object2D> &World::getObjects()
-{
-    return objects_;
-}
-
-Vector World::loadMapFromImage(std::string imgPath)
+Vector World::loadMapFromImage(std::string& imgPath) noexcept
 {
     sf::Image mapImage;
     sf::Color pixel;
 
-    Vector playerPosition;
+    Vector playerPosition = {};
 
     mapImage.loadFromFile(imgPath);
 
@@ -65,4 +51,20 @@ Vector World::loadMapFromImage(std::string imgPath)
     }
 
     return playerPosition;
+}
+
+void World::addObject(const Object2D& object2D) noexcept
+{
+    objects_.push_back(object2D);
+}
+
+void World::draw(sf::RenderTarget& window) const
+{
+    for(auto& obj : objects_)
+        obj.draw(window);
+}
+
+std::vector<Object2D> &World::getObjects()
+{
+    return objects_;
 }

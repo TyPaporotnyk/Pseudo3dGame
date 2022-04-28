@@ -13,3 +13,8 @@ Cube::Cube(Vector position, int scale)
         v *= scale;
     }
 }
+
+void Cube::draw(sf::RenderTarget &window) const
+{
+
+}

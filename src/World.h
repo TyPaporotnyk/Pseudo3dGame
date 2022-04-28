@@ -18,17 +18,14 @@ private:
     std::vector<Object2D> objects_;
 
 public:
+    explicit World(std::vector<Object2D> objects = {}) noexcept;
 
-    explicit World(std::vector<Object2D> objects = {});
+    Vector loadMapFromImage(std::string& imgPath) noexcept;
+    void addObject(const Object2D& object2D) noexcept;
 
-    void draw(sf::RenderTarget& window) override;
-    void addObject(Object2D object2D);
+    void draw(sf::RenderTarget& window) const override;
 
-    Vector loadMapFromImage(std::string imgPath);
-
-    std::vector<Object2D>& getObjects();
-
-
+    [[nodiscard]]std::vector<Object2D>& getObjects();
 };
 
 

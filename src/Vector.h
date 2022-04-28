@@ -25,7 +25,7 @@ struct Vector
 
     static float length(Vector v1, Vector v2);
 
-    [[nodiscard]] float abs();
+    [[nodiscard]]float abs() const;
     void normalize();
 };
 

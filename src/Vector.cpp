@@ -14,22 +14,22 @@ Vector::Vector(float x, float y)
 
 Vector Vector::operator+(float v)
 {
-    return Vector(x + v, y + v);
+    return {x + v, y + v};
 }
 
 Vector Vector::operator+(Vector v)
 {
-    return Vector(x + v.x, y + v.y);
+    return {x + v.x, y + v.y};
 }
 
 Vector Vector::operator*(float n)
 {
-    return Vector(x + n, y + n);
+    return {x + n, y + n};
 }
 
 Vector Vector::operator*(Vector v)
 {
-    return Vector(x * v.x, y * v.y);
+    return {x * v.x, y * v.y};
 }
 
 Vector &Vector::operator+=(Vector v)
@@ -58,7 +58,7 @@ float Vector::length(Vector v1, Vector v2)
     return sqrt(pow(v1.x - v2.x,2) + pow(v1.y - v2.y,2));
 }
 
-float Vector::abs()
+float Vector::abs() const
 {
     return sqrt(x*x + y*y);
 }

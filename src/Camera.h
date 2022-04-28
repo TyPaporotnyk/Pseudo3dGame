@@ -18,25 +18,30 @@ private:
     float maxDist_;
 
     std::vector<Vector> collisionPoints_;
-    std::vector<double> depths_;
+    std::vector<float> depths_;
 
     World& world_;
 
-    void crossing() noexcept;
+    void crossing()noexcept;
 
-    [[nodiscard]] float degCheck(float deg);
+    static float degCheck(float deg) noexcept;
 
 public:
-
     explicit Camera(World& world, Vector position = {}, float speed = 5, float angle = 0, float maxDist = 20);
 
-    void setPos(Vector pos);
-
     void control(const sf::RenderWindow& window, float dTime) noexcept;
-    void draw(sf::RenderTarget& window) override;
-    void drawWorld(sf::RenderTarget& window);
+    void draw(sf::RenderTarget& window) const override;
+    void drawWorld(sf::RenderTarget& window) const noexcept;
 
-    Vector getPosition() const;
+    [[nodiscard]]float getAngle() const;
+    [[nodiscard]]float getSpeed() const;
+    [[nodiscard]]float getMaxDist() const;
+    [[nodiscard]]Vector getPosition() const;
+
+    [[nodiscard]]std::vector<Vector> &getCollisionPoints();
+    [[nodiscard]]std::vector<float> &getDepths();
+
+    [[nodiscard]]World &getWorld() const;
 };
 
 

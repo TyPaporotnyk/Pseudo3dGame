@@ -7,14 +7,14 @@
 #include "../Settings.h"
 
 Object2D::Object2D(Vector position, std::vector<Vector> points) :
-points_(points)
+position_(position), points_(std::move(points))
 {
     for(auto& p : this->points_){
         p += position;
     }
 }
 
-void Object2D::draw(sf::RenderTarget &window)
+void Object2D::draw(sf::RenderTarget &window) const
 {
     sf::ConvexShape figure;
     figure.setPointCount(points_.size());
@@ -25,8 +25,6 @@ void Object2D::draw(sf::RenderTarget &window)
     }
 
     figure.setFillColor(sf::Color(255, 228, 196));
-    figure.setOutlineColor(sf::Color(252, 248, 243));
-//    figure.setOutlineThickness(5);
 
     window.draw(figure);
 }
@@ -34,4 +32,14 @@ void Object2D::draw(sf::RenderTarget &window)
 std::vector<Vector> &Object2D::getNodes()
 {
     return points_;
+}
+
+const std::vector<Vector> &Object2D::getPoints() const
+{
+    return points_;
+}
+
+const Vector &Object2D::getPosition() const
+{
+    return position_;
 }
