@@ -2,7 +2,7 @@
 
 | 90 rays                                    | 400 rays                                      |
 | -------------------------------------------|-----------------------------------------------|
-| <img src="docs/90rays.jpeg" width="50%"/>  |  <img src="docs/400rays.jpeg" width="auto"/>  |
+| <img src="docs/90rays.jpeg" width="50%"/>  |  <img src="docs/400rays.png" width="auto"/>  |
 
 # Requirements
 * C++ 20
