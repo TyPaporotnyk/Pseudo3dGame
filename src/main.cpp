@@ -18,6 +18,7 @@ int main()
     // Text init
     sf::Font font;
     font.loadFromFile(DATA_DIR + std::string("/font/font.ttf"));
+
     sf::Text text;
     text.setFont(font);
     text.setPosition(20,20);
@@ -31,45 +32,54 @@ int main()
 
     Camera camera(world, playerPos, 0.05);
 
-    bool mapView = true;
+    bool mapView = false;
+    bool isPaused = false;
 
     // Cursor init
-    window.setMouseCursorVisible(false);
-    sf::CircleShape cursor(5);
-    cursor.setPosition(round(window.getSize().x / 2) + 5, round(window.getSize().y / 2) + 5);
+    window.setMouseCursorVisible(isPaused);
+//    sf::CircleShape cursor(5);
+//    cursor.setPosition(round(window.getSize().x / 2) + 5, round(window.getSize().y / 2) + 5);
 
 
     while(window.isOpen())
     {
         // Control
         sf::Event event = {};
-        while(window.pollEvent(event))
+        while (window.pollEvent(event))
         {
-            if(event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
             {
                 window.close();
             }
-            if(event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+            if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !isPaused)
             {
                 mapView = !mapView;
+            }
+            if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            {
+                isPaused = !isPaused;
+                window.setMouseCursorVisible(isPaused);
+                sf::Mouse::setPosition(sf::Vector2i(window.getSize().x / 2, window.getSize().y / 2), window);
             }
         }
 
         window.clear();
 
         // Calculation
-        camera.control(window, 1);
-
+        if (!isPaused)
+        {
+            camera.control(window, 1, isPaused);
+        }
         // Draw world
         camera.drawWorld(window);
 
-        if(mapView)
+
+        if (mapView)
         {
             // Draw map and camera
             camera.draw(window);
             world.draw(window);
-        }
-        else
+        } else
         {
             // Draw text
             auto textSceneBuilder = std::ostringstream();
@@ -83,10 +93,14 @@ int main()
         }
 
         // Draw cursor
-        window.draw(cursor);
+//        if(!isPaused)
+//        {
+//            window.draw(cursor);
+//        }
+
 
         window.display();
-    }
 
+    }
     return 0;
 }

@@ -27,3 +27,4 @@ cmake --build cmake-build --target release
 | Rotation             | Mouse movement  |
 | Exit                 | Q key           |
 | Show or hide map     | M key           |
+| Pause                | Esc             |

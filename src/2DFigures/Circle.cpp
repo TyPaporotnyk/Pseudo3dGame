@@ -8,7 +8,7 @@
 #include <utility>
 
 Circle::Circle(std::string name, sf::Texture& wallTexture, Vector position, float radius) :
-        Object2D(std::move(name), wallTexture, position), radius_(radius)
+        Object2D(std::move(name), wallTexture, Entities::CIRCLE, position), radius_(radius)
 {
     float p = 10;
     for(float i = 0; i < 360; i+=p)

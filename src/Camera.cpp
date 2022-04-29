@@ -15,19 +15,21 @@ world_(world), position_(position), speed_(speed), angle_(angle), maxDist_(maxDi
 
 }
 
-void Camera::control(const sf::RenderWindow& window, float dTime) noexcept
+void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraRotate) noexcept
 {
-    // Mouse movement
-    float windowCenterX = round(window.getSize().x / 2);
-    float windowCenterY = round(window.getSize().y / 2);
+    if(!cameraRotate)
+    {
+        // Mouse movement
+        float windowCenterX = round(window.getSize().x / 2);
+        float windowCenterY = round(window.getSize().y / 2);
 
-    float rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window
-            .getSize().x);
+        float rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window
+                .getSize().x);
 
-    angle_ = degCheck(angle_ + rotationHorizontal);
+        angle_ = degCheck(angle_ + rotationHorizontal);
 
-    sf::Mouse::setPosition(sf::Vector2i(windowCenterX, windowCenterY), window);
-
+        sf::Mouse::setPosition(sf::Vector2i(windowCenterX, windowCenterY), window);
+    }
     // Keyboard check
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
         position_.x += cosf(angle_*M_PI/180) * speed_ * dTime;
@@ -161,6 +163,8 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
     window.draw(sky);
     window.draw(floor);
 
+    Entities entity = Entities::NONE;
+
     int i = 0;
     for(auto& wall : collisionPoints_)
     {
@@ -170,7 +174,11 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
             continue;
         }
 
-        sprite.setTexture(world_.getObjects().find(wall.first)->second.getWallTexture());
+        if(entity != world_.getObjects().find(wall.first)->second.getType())
+        {
+            sprite.setTexture(world_.getObjects().find(wall.first)->second.getWallTexture());
+            entity = world_.getObjects().find(wall.first)->second.getType();
+        }
 
         Vector rayEnd = wall.second.second;
 
@@ -188,10 +196,10 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
         }
 
         segmentHeight = std::floor(segmentWidth * segmentHeightProj / depths_[i]);
-        sprite.setTextureRect(sf::IntRect(static_cast<unsigned short>(std::round(sprite.getTexture()->getSize().x *
-        wallTextureColumn)), 0,
-                                          5, sprite.getTexture()->getSize().y));
-        sprite.setScale(1,segmentHeight/sprite.getTexture()->getSize().y);
+        sprite.setTextureRect(sf::IntRect(std::floor(sprite.getTexture()->getSize().x *
+                                                            wallTextureColumn), 0,5, sprite.getTexture()->getSize()
+                                                            .y));
+        sprite.setScale(0.7777,segmentHeight/sprite.getTexture()->getSize().y);
         sprite.setPosition(i*segmentWidth, WINDOW_HEIGHT/2 - segmentHeight/2);
 
         window.draw(sprite);

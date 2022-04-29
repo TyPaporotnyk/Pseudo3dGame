@@ -11,6 +11,14 @@
 #include "../IDrawble.h"
 #include "../Vector.h"
 
+enum class Entities
+{
+    CUBE,
+    CIRCLE,
+    PLAYER,
+    NONE
+};
+
 class Object2D : public virtual IDrawable
 {
 protected:
@@ -21,8 +29,10 @@ protected:
 
     sf::Texture& wallTexture_;
 
+    Entities entity_;
+
 public:
-    explicit Object2D(std::string name, sf::Texture& wallTexture, Vector position = {},
+    explicit Object2D(std::string name, sf::Texture& wallTexture, Entities entity, Vector position = {},
                       std::vector<Vector>points = {});
 
     std::vector<Vector>& getNodes();
@@ -31,6 +41,8 @@ public:
 
     [[nodiscard]]const std::string &getName() const;
     [[nodiscard]]sf::Texture &getWallTexture();
+
+    [[nodiscard]]Entities getType() const;
 
     [[nodiscard]]const std::vector<Vector> &getPoints() const;
     [[nodiscard]]const Vector &getPosition() const;

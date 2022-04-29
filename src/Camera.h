@@ -29,7 +29,7 @@ private:
 public:
     explicit Camera(World& world, Vector position = {}, float speed = 5, float angle = 0, float maxDist = 20);
 
-    void control(const sf::RenderWindow& window, float dTime) noexcept;
+    void control(const sf::RenderWindow& window, float dTime, bool cameraRotate) noexcept;
     void draw(sf::RenderTarget& window) const override;
     void drawWorld(sf::RenderTarget& window) noexcept;
 

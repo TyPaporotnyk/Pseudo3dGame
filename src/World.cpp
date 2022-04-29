@@ -48,8 +48,8 @@ Vector World::loadMapFromImage(const std::string& worldPath) noexcept
             CELL_HEIGHT-1 && j == CELL_HEIGHT-1))
             {
                 Circle circle(std::to_string(i + 1) + " " + std::to_string(j + 1) + "-Circle",
-                              *ResourceManager::loadTexture(std::string(DATA_DIR + std::string("/texture/woodWall"
-                                                                                               ".png"))),
+                              *ResourceManager::loadTexture(std::string(DATA_DIR + std::string("/texture/woodWall1"
+                                                                                               ".jpg"))),
                               {static_cast<float>(i),static_cast<float>(j)});
                 objects_.insert({circle.getName(),circle});
             }
@@ -59,7 +59,7 @@ Vector World::loadMapFromImage(const std::string& worldPath) noexcept
             if(pixel == sf::Color(0,0,0))
             {
                 Cube cube(std::to_string(i + 1) + " " + std::to_string(j + 1) + "-Cube",
-                          *ResourceManager::loadTexture(std::string(DATA_DIR + std::string("/texture/wall.png"))),
+                          *ResourceManager::loadTexture(std::string(DATA_DIR + std::string("/texture/wall3.png"))),
                           {static_cast<float>(i), static_cast<float>(j)});
                 objects_.insert({cube.getName(),cube});
             }
