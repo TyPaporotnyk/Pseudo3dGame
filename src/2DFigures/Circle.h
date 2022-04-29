@@ -11,8 +11,11 @@
 
 class Circle :  public Object2D
 {
+private:
+    float radius_;
+
 public:
-    explicit Circle(Vector position = {}, float radius = 1);
+    explicit Circle(std::string name, sf::Texture& wallTexture, Vector position = {}, float radius = 1);
 
     void draw(sf::RenderTarget &window) const override;
 };

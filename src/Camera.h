@@ -17,7 +17,7 @@ private:
     float speed_;
     float maxDist_;
 
-    std::vector<Vector> collisionPoints_;
+    std::vector<std::pair<std::string,std::pair<Vector, Vector>>> collisionPoints_;
     std::vector<float> depths_;
 
     World& world_;
@@ -31,14 +31,14 @@ public:
 
     void control(const sf::RenderWindow& window, float dTime) noexcept;
     void draw(sf::RenderTarget& window) const override;
-    void drawWorld(sf::RenderTarget& window) const noexcept;
+    void drawWorld(sf::RenderTarget& window) noexcept;
 
     [[nodiscard]]float getAngle() const;
     [[nodiscard]]float getSpeed() const;
     [[nodiscard]]float getMaxDist() const;
     [[nodiscard]]Vector getPosition() const;
 
-    [[nodiscard]]std::vector<Vector> &getCollisionPoints();
+    [[nodiscard]]std::vector<std::pair<std::string,std::pair<Vector, Vector>>> &getCollisionPoints();
     [[nodiscard]]std::vector<float> &getDepths();
 
     [[nodiscard]]World &getWorld() const;

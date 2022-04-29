@@ -16,12 +16,15 @@ struct Vector
 
     Vector operator +(float v);
     Vector operator +(Vector v);
+    Vector operator -(Vector v);
     Vector operator *(float n);
     Vector operator *(Vector v);
 
     Vector& operator +=(Vector v);
     Vector& operator *=(Vector v);
     Vector& operator *=(float n);
+
+    Vector& operator /=(float n);
 
     static float length(Vector v1, Vector v2);
 

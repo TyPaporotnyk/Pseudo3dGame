@@ -11,8 +11,12 @@
 
 class Cube : public Object2D
 {
+private:
+    int scale_;
+
 public:
-    explicit Cube(Vector position = {}, int scale = 1);
+    explicit Cube(std::string name, sf::Texture& wallTexture, Vector position = {},
+                  const std::vector<Vector>&points = {}, int scale = 1);
 
     void draw(sf::RenderTarget &window) const override;
 };

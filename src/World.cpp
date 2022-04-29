@@ -9,23 +9,36 @@
 #include "2DFigures/Cube.h"
 #include "2DFigures/Circle.h"
 
+#include "ResourceManager.h"
+
 #include "Settings.h"
 
 
-World::World(std::vector<Object2D> objects) noexcept :
-objects_(std::move(objects))
+World::World(const std::string& skyTexturePath,
+             const std::string& floorTexturePath) noexcept
 {
+    skyTexture_.loadFromFile(skyTexturePath);
+    skySprite_.setTexture(skyTexture_);
 
+    floorTexture_.loadFromFile(floorTexturePath);
+    floorSprite_.setTexture(floorTexture_);
 }
 
-Vector World::loadMapFromImage(std::string& imgPath) noexcept
+Vector World::loadMapFromImage(const std::string& worldPath) noexcept
 {
     sf::Image mapImage;
     sf::Color pixel;
 
+    sf::Texture wallT;
+    wallT.loadFromFile(std::string(DATA_DIR + std::string("/texture/wall.png")));
+
+    sf::Texture circleT;
+    circleT.loadFromFile(std::string(DATA_DIR + std::string("/texture/wall.png")));
+
     Vector playerPosition = {};
 
-    mapImage.loadFromFile(imgPath);
+    mapImage.loadFromFile(worldPath);
+
 
     for(size_t i = 0; i < CELL_WIDTH; i++)
     {
@@ -34,14 +47,21 @@ Vector World::loadMapFromImage(std::string& imgPath) noexcept
             if((i == 1 && j == 1) || (i == 1 && j == CELL_HEIGHT-1) || (i == CELL_HEIGHT-1 && j == 1) || (i ==
             CELL_HEIGHT-1 && j == CELL_HEIGHT-1))
             {
-                objects_.push_back(Circle({static_cast<float>(i),static_cast<float>(j)}));
+                Circle circle(std::to_string(i + 1) + " " + std::to_string(j + 1) + "-Circle",
+                              *ResourceManager::loadTexture(std::string(DATA_DIR + std::string("/texture/woodWall"
+                                                                                               ".png"))),
+                              {static_cast<float>(i),static_cast<float>(j)});
+                objects_.insert({circle.getName(),circle});
             }
 
             pixel = mapImage.getPixel(i,j);
 
             if(pixel == sf::Color(0,0,0))
             {
-                objects_.push_back(Cube({static_cast<float>(i),static_cast<float>(j)}));
+                Cube cube(std::to_string(i + 1) + " " + std::to_string(j + 1) + "-Cube",
+                          *ResourceManager::loadTexture(std::string(DATA_DIR + std::string("/texture/wall.png"))),
+                          {static_cast<float>(i), static_cast<float>(j)});
+                objects_.insert({cube.getName(),cube});
             }
             else if(pixel == sf::Color(0,0,255))
             {
@@ -55,16 +75,16 @@ Vector World::loadMapFromImage(std::string& imgPath) noexcept
 
 void World::addObject(const Object2D& object2D) noexcept
 {
-    objects_.push_back(object2D);
+    objects_.insert({object2D.getName(), object2D});
 }
 
 void World::draw(sf::RenderTarget& window) const
 {
-    for(auto& obj : objects_)
-        obj.draw(window);
+    for(auto obj : objects_)
+        obj.second.draw(window);
 }
 
-std::vector<Object2D> &World::getObjects()
+std::map<std::string ,Object2D> &World::getObjects()
 {
     return objects_;
 }

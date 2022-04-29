@@ -2,7 +2,11 @@
 
 | 90 rays                        | 400 rays                        |
 | -------------------------------|---------------------------------|
-| <img src="docs/90rays.jpeg"/>  |  <img src="docs/400rays.png"/>  |
+| <img src="docs/90rays.png"/>  |  <img src="docs/400rays.png"/>  |
+
+# Texturing
+
+<img src="docs/texturing.png" width="auto"/>
 
 # Requirements
 * C++ 20

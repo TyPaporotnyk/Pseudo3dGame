@@ -4,12 +4,16 @@
 
 #include "Object2D.h"
 
+#include <utility>
+
 #include "../Settings.h"
 
-Object2D::Object2D(Vector position, std::vector<Vector> points) :
-position_(position), points_(std::move(points))
+Object2D::Object2D(std::string name, sf::Texture& wallTexture, Vector position,
+                   std::vector<Vector>points) :
+name_(std::move(name)), wallTexture_(wallTexture), position_(position), points_(std::move(points))
 {
-    for(auto& p : this->points_){
+    for(auto& p : this->points_)
+    {
         p += position;
     }
 }
@@ -42,4 +46,14 @@ const std::vector<Vector> &Object2D::getPoints() const
 const Vector &Object2D::getPosition() const
 {
     return position_;
+}
+
+const std::string &Object2D::getName() const
+{
+    return name_;
+}
+
+sf::Texture &Object2D::getWallTexture()
+{
+    return wallTexture_;
 }

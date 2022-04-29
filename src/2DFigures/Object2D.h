@@ -17,12 +17,20 @@ protected:
     std::vector<Vector>points_;
     Vector position_;
 
+    std::string name_;
+
+    sf::Texture& wallTexture_;
+
 public:
-    explicit Object2D(Vector position = {}, std::vector<Vector> points = {});
+    explicit Object2D(std::string name, sf::Texture& wallTexture, Vector position = {},
+                      std::vector<Vector>points = {});
 
     std::vector<Vector>& getNodes();
 
     void draw(sf::RenderTarget &window) const override;
+
+    [[nodiscard]]const std::string &getName() const;
+    [[nodiscard]]sf::Texture &getWallTexture();
 
     [[nodiscard]]const std::vector<Vector> &getPoints() const;
     [[nodiscard]]const Vector &getPosition() const;

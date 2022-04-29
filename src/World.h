@@ -15,17 +15,24 @@
 class World : public virtual IDrawable
 {
 private:
-    std::vector<Object2D> objects_;
+    std::map<std::string ,Object2D> objects_;
+
+    sf::Texture skyTexture_;
+    sf::Sprite skySprite_;
+
+    sf::Texture floorTexture_;
+    sf::Sprite floorSprite_;
 
 public:
-    explicit World(std::vector<Object2D> objects = {}) noexcept;
+    explicit World(const std::string& skyTexturePath = " ",
+                  const std::string& floorTexturePath = " ")noexcept;
 
-    Vector loadMapFromImage(std::string& imgPath) noexcept;
+    Vector loadMapFromImage(const std::string& worldPath) noexcept;
     void addObject(const Object2D& object2D) noexcept;
 
     void draw(sf::RenderTarget& window) const override;
 
-    [[nodiscard]]std::vector<Object2D>& getObjects();
+    [[nodiscard]]std::map<std::string ,Object2D>& getObjects();
 };
 
 

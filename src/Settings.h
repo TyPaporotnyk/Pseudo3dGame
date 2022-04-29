@@ -17,6 +17,6 @@
 
 #define FOV M_PI/3
 
-#define NUM_RAYS 400
+#define NUM_RAYS 500
 
 #endif //PSEUDO3DGAME_SETTINGS_H
