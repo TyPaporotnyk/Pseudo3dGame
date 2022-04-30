@@ -27,7 +27,7 @@ int main()
     // World and camera init
     World world(std::string(DATA_DIR + std::string("/texture/sky/sky.png")));
 
-    std::string path = DATA_DIR + std::string("/map1.png");
+    std::string path = DATA_DIR + std::string("/map/map.png");
     Vector playerPos = world.loadMapFromImage(path);
 
     Camera camera(world, playerPos, 0.05);
