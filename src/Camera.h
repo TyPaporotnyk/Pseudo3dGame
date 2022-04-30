@@ -13,7 +13,7 @@ class Camera : public virtual IDrawable
 {
 private:
     Vector position_;
-    float angle_;
+    int angle_;
     float speed_;
     float maxDist_;
 
@@ -27,13 +27,13 @@ private:
     static float degCheck(float deg) noexcept;
 
 public:
-    explicit Camera(World& world, Vector position = {}, float speed = 5, float angle = 0, float maxDist = 20);
+    explicit Camera(World& world, Vector position = {}, float speed = 5, int angle = 0, float maxDist = 20);
 
     void control(const sf::RenderWindow& window, float dTime, bool cameraRotate) noexcept;
     void draw(sf::RenderTarget& window) const override;
     void drawWorld(sf::RenderTarget& window) noexcept;
 
-    [[nodiscard]]float getAngle() const;
+    [[nodiscard]]int getAngle() const;
     [[nodiscard]]float getSpeed() const;
     [[nodiscard]]float getMaxDist() const;
     [[nodiscard]]Vector getPosition() const;

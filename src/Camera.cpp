@@ -9,7 +9,7 @@
 #include <iostream>
 #include <cmath>
 
-Camera::Camera(World &world, Vector position, float speed, float angle, float maxDist) :
+Camera::Camera(World &world, Vector position, float speed, int angle, float maxDist) :
 world_(world), position_(position), speed_(speed), angle_(angle), maxDist_(maxDist)
 {
 
@@ -152,16 +152,28 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
 
     float d = NUM_RAYS / 2*tan(FOV/2);
 
-    sf::RectangleShape sky;
-    sky.setSize({WINDOW_WIDTH, WINDOW_HEIGHT/2});
-    sky.setFillColor(sf::Color(135,206,235));
+    float offset = -10 * (angle_+1) % world_.getSkyTexture().getSize().x;
+
+    sf::Sprite sky;
+    sky.setTexture(world_.getSkyTexture());
+
+    sky.setScale(2,2);
+
+    sky.setTextureRect(sf::IntRect(offset,0,world_.getSkyTexture().getSize().x,
+                                   world_.getSkyTexture().getSize().y));
+    window.draw(sky);
+    sky.setTextureRect(sf::IntRect(offset - WINDOW_WIDTH,0,
+                                   world_.getSkyTexture().getSize().x,world_.getSkyTexture().getSize().y));
+    window.draw(sky);
+    sky.setTextureRect(sf::IntRect(offset + WINDOW_WIDTH,0,
+                                   world_.getSkyTexture().getSize().x,world_.getSkyTexture().getSize().y));
+    window.draw(sky);
 
     sf::RectangleShape floor;
     floor.setSize({WINDOW_WIDTH, WINDOW_HEIGHT/2});
     floor.setPosition(0,(WINDOW_HEIGHT/2));
     floor.setFillColor(sf::Color(162,101,62));
 
-    window.draw(sky);
     window.draw(floor);
 
     Entities entity = Entities::NONE;
@@ -199,12 +211,9 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
         sf::RectangleShape rec;
 
         segmentHeight = d * segmentHeightProj / depths_[i] / 10;
-//        segmentHeight = segmentWidth * segmentHeightProj / depths_[i];
-//        rec.setSize({segmentWidth, segmentHeight});
-//        rec.setPosition(i*segmentWidth, WINDOW_HEIGHT/2 - segmentHeight/2);
-        sprite.setTextureRect(sf::IntRect(round(sprite.getTexture()->getSize().x *
-                                                            wallTextureColumn), 0,5, sprite.getTexture()->getSize()
-                                                            .y));
+
+        sprite.setTextureRect(sf::IntRect(round(sprite.getTexture()->getSize().x * wallTextureColumn),
+                                                   0,5, sprite.getTexture()->getSize().y));
         sprite.setScale(0.7777,segmentHeight/sprite.getTexture()->getSize().y);
         sprite.setPosition(i*segmentWidth, WINDOW_HEIGHT/2 - segmentHeight/2);
 
@@ -223,7 +232,7 @@ float Camera::degCheck(float deg) noexcept
     return static_cast<float>(fmod(360 + fmod(deg, 360), 360));
 }
 
-float Camera::getAngle() const
+int Camera::getAngle() const
 {
     return angle_;
 }

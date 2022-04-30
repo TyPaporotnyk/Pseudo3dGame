@@ -33,6 +33,9 @@ public:
     void draw(sf::RenderTarget& window) const override;
 
     [[nodiscard]]std::map<std::string ,Object2D>& getObjects();
+
+    [[nodiscard]]sf::Texture &getSkyTexture();
+    [[nodiscard]]sf::Texture &getFloorTexture();
 };
 
 

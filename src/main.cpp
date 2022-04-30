@@ -25,7 +25,7 @@ int main()
     text.setCharacterSize(24);
 
     // World and camera init
-    World world;
+    World world(std::string(DATA_DIR + std::string("/texture/sky/sky.png")));
 
     std::string path = DATA_DIR + std::string("/map1.png");
     Vector playerPos = world.loadMapFromImage(path);
@@ -37,9 +37,6 @@ int main()
 
     // Cursor init
     window.setMouseCursorVisible(isPaused);
-//    sf::CircleShape cursor(5);
-//    cursor.setPosition(round(window.getSize().x / 2) + 5, round(window.getSize().y / 2) + 5);
-
 
     while(window.isOpen())
     {
@@ -86,18 +83,12 @@ int main()
             textSceneBuilder << std::setw(2) << 1'000'000 / clock.restart().asMicroseconds() << " FPS" << std::endl;
             textSceneBuilder << std::setprecision(3) << "x: " << camera.getPosition().x << ", ";
             textSceneBuilder << std::setprecision(3) << "y: " << camera.getPosition().y << std::endl;
+            textSceneBuilder << std::setw(3) << "angle: " << camera.getAngle() << std::endl;
 
             text.setString(textSceneBuilder.str());
 
             window.draw(text);
         }
-
-        // Draw cursor
-//        if(!isPaused)
-//        {
-//            window.draw(cursor);
-//        }
-
 
         window.display();
 

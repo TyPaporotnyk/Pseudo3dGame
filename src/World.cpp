@@ -15,25 +15,15 @@
 
 
 World::World(const std::string& skyTexturePath,
-             const std::string& floorTexturePath) noexcept
+             const std::string& floorTexturePath) noexcept :
+             skyTexture_(*ResourceManager::loadTexture(skyTexturePath))
 {
-    skyTexture_.loadFromFile(skyTexturePath);
-    skySprite_.setTexture(skyTexture_);
-
-    floorTexture_.loadFromFile(floorTexturePath);
-    floorSprite_.setTexture(floorTexture_);
 }
 
 Vector World::loadMapFromImage(const std::string& worldPath) noexcept
 {
     sf::Image mapImage;
     sf::Color pixel;
-
-    sf::Texture wallT;
-    wallT.loadFromFile(std::string(DATA_DIR + std::string("/texture/wall.png")));
-
-    sf::Texture circleT;
-    circleT.loadFromFile(std::string(DATA_DIR + std::string("/texture/wall.png")));
 
     Vector playerPosition = {};
 
@@ -59,7 +49,7 @@ Vector World::loadMapFromImage(const std::string& worldPath) noexcept
             if(pixel == sf::Color(0,0,0))
             {
                 Cube cube(std::to_string(i + 1) + " " + std::to_string(j + 1) + "-Cube",
-                          *ResourceManager::loadTexture(std::string(DATA_DIR + std::string("/texture/wall3.png"))),
+                          *ResourceManager::loadTexture(std::string(DATA_DIR + std::string("/texture/wall2.png"))),
                           {static_cast<float>(i), static_cast<float>(j)});
                 objects_.insert({cube.getName(),cube});
             }
@@ -87,4 +77,14 @@ void World::draw(sf::RenderTarget& window) const
 std::map<std::string ,Object2D> &World::getObjects()
 {
     return objects_;
+}
+
+sf::Texture &World::getSkyTexture()
+{
+    return skyTexture_;
+}
+
+sf::Texture &World::getFloorTexture()
+{
+    return floorTexture_;
 }
