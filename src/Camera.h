@@ -17,7 +17,7 @@ private:
     float speed_;
     float maxDist_;
 
-    std::vector<std::pair<std::string,std::pair<Vector, Vector>>> collisionPoints_;
+    std::vector<std::pair<std::string, Vector>> collisionPoints_;
     std::vector<float> depths_;
 
     World& world_;
@@ -38,7 +38,7 @@ public:
     [[nodiscard]]float getMaxDist() const;
     [[nodiscard]]Vector getPosition() const;
 
-    [[nodiscard]]std::vector<std::pair<std::string,std::pair<Vector, Vector>>> &getCollisionPoints();
+    [[nodiscard]]std::vector<std::pair<std::string, Vector>> &getCollisionPoints();
     [[nodiscard]]std::vector<float> &getDepths();
 
     [[nodiscard]]World &getWorld() const;

@@ -97,17 +97,17 @@ void Camera::crossing()noexcept
                 {
                     if (u < bestLen)
                     {
-                        bestPoint = {static_cast<float>(rayStart.x + u * (rayDir.x - rayStart.x)),
-                                                   static_cast<float>(rayStart.y + u * (rayDir.y - rayStart.y))};
                         bestLen = u;
+
+                        bestPoint = {static_cast<float>(rayStart.x + bestLen * (rayDir.x - rayStart.x)),
+                                                   static_cast<float>(rayStart.y + bestLen * (rayDir.y - rayStart.y))};
                         bestPointName = object.first;
-                        wallPoints = {static_cast<float>(x1),static_cast<float>(x2)};
                     }
                 }
             }
         }
-        collisionPoints_.push_back({bestPointName, {wallPoints, bestPoint}});
-        depths_.push_back(bestLen);
+        collisionPoints_.push_back({bestPointName, bestPoint});
+        depths_.push_back(bestLen * cosf(((360-angle_) * M_PI / 180) - curAngle));
 
         curAngle += FOV / NUM_RAYS;
     }
@@ -128,8 +128,8 @@ void Camera::draw(sf::RenderTarget &window) const
 
     for(int i = 0; i < collisionPoints_.size(); i++)
     {
-        triangle.setPoint(i+1, {collisionPoints_[i].second.second.x * CELL_SCALE,
-                                            collisionPoints_[i].second.second.y * CELL_SCALE});
+        triangle.setPoint(i+1, {collisionPoints_[i].second.x * CELL_SCALE,
+                                            collisionPoints_[i].second.y * CELL_SCALE});
     }
     triangle.setPoint(collisionPoints_.size()+1, {(position_.x * CELL_SCALE + CELL_SCALE/3),
                                                  (position_.y * CELL_SCALE + CELL_SCALE/3)});
@@ -146,10 +146,11 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
 {
     sf::RectangleShape segment;
     float segmentWidth = WINDOW_WIDTH / NUM_RAYS;
-    float segmentHeightProj = segmentWidth*100;
+    float segmentHeightProj = 100;
     float segmentHeight;
     sf::Sprite sprite;
 
+    float d = NUM_RAYS / 2*tan(FOV/2);
 
     sf::RectangleShape sky;
     sky.setSize({WINDOW_WIDTH, WINDOW_HEIGHT/2});
@@ -168,7 +169,7 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
     int i = 0;
     for(auto& wall : collisionPoints_)
     {
-        if(depths_[i] >= maxDist_)
+        if(wall.first == "")
         {
             i++;
             continue;
@@ -180,7 +181,7 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
             entity = world_.getObjects().find(wall.first)->second.getType();
         }
 
-        Vector rayEnd = wall.second.second;
+        Vector rayEnd = wall.second;
 
         float wallTextureColumn = 0;
 
@@ -195,8 +196,13 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
             wallTextureColumn = rayEnd.x - std::floorf(rayEnd.x);
         }
 
-        segmentHeight = std::floor(segmentWidth * segmentHeightProj / depths_[i]);
-        sprite.setTextureRect(sf::IntRect(std::floor(sprite.getTexture()->getSize().x *
+        sf::RectangleShape rec;
+
+        segmentHeight = d * segmentHeightProj / depths_[i] / 10;
+//        segmentHeight = segmentWidth * segmentHeightProj / depths_[i];
+//        rec.setSize({segmentWidth, segmentHeight});
+//        rec.setPosition(i*segmentWidth, WINDOW_HEIGHT/2 - segmentHeight/2);
+        sprite.setTextureRect(sf::IntRect(round(sprite.getTexture()->getSize().x *
                                                             wallTextureColumn), 0,5, sprite.getTexture()->getSize()
                                                             .y));
         sprite.setScale(0.7777,segmentHeight/sprite.getTexture()->getSize().y);
@@ -232,7 +238,7 @@ float Camera::getMaxDist() const
     return maxDist_;
 }
 
-std::vector<std::pair<std::string,std::pair<Vector, Vector>>> &Camera::getCollisionPoints()
+std::vector<std::pair<std::string, Vector>> &Camera::getCollisionPoints()
 {
     return collisionPoints_;
 }
