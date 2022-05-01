@@ -4,46 +4,49 @@
 
 #include "Camera.h"
 
-#include "Settings.h"
-
 #include <iostream>
 #include <cmath>
 
-Camera::Camera(World &world, Vector position, float speed, int angle, float maxDist) :
-world_(world), position_(position), speed_(speed), angle_(angle), maxDist_(maxDist) { }
+#include "../Core/ResourceManager.h"
+
+Camera::Camera(World& world_, Vector position, float speed, int raysNum, int sight, int angle, float maxDist) :
+world_(world_) ,position_(position), speed_(speed), raysNum_(raysNum), sight_(sight*M_PI/180), angle_(angle), maxDist_
+(maxDist)
+{ }
 
 void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraRotate) noexcept
 {
-    if(!cameraRotate)
-    {
-        // Mouse movement
-        float windowCenterX = round(window.getSize().x / 2);
-        float windowCenterY = round(window.getSize().y / 2);
+    // Mouse movement
+    float windowCenterX = round(window.getSize().x / 2);
+    float windowCenterY = round(window.getSize().y / 2);
 
-        float rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window.getSize().x);
+    float rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window.getSize().x);
 
-        angle_ = degCheck(angle_ + rotationHorizontal);
+    angle_ = degCheck(angle_ + rotationHorizontal);
 
-        sf::Mouse::setPosition(sf::Vector2i(windowCenterX, windowCenterY), window);
-    }
+    sf::Mouse::setPosition(sf::Vector2i(windowCenterX, windowCenterY), window);
+
+
+    float dCos = cosf((360-angle_)*M_PI/180);
+    float dSin = sinf((360-angle_)*M_PI/180);
 
     // Keyboard check
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-        position_.x += cosf(angle_*M_PI/180) * speed_ * dTime;
-        position_.y -= sinf(angle_*M_PI/180) * speed_ * dTime;
+        position_.x += speed_ * dCos * dTime;
+        position_.y += speed_ * dSin * dTime;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-        position_.x -= cosf(angle_*M_PI/180) * speed_ * dTime;
-        position_.y += sinf(angle_*M_PI/180) * speed_ * dTime;
+        position_.x -= dCos * speed_ * dTime;
+        position_.y -= dSin * speed_ * dTime;
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-        position_.x += cosf(degCheck(angle_ + 90)*M_PI/180) * speed_ * dTime;
-        position_.y -= sinf(degCheck(angle_ + 90)*M_PI/180) * speed_ * dTime;
+        position_.x += dSin * speed_ * dTime;
+        position_.y -= dCos * speed_ * dTime;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-        position_.x += cosf(degCheck(angle_ - 90)*M_PI/180) * speed_ * dTime;
-        position_.y -= sinf(degCheck(angle_ - 90)*M_PI/180) * speed_ * dTime;
+        position_.x -= dSin * speed_ * dTime;
+        position_.y += dCos * speed_ * dTime;
     }
 
     // Crossing rays
@@ -55,9 +58,9 @@ void Camera::crossing()noexcept
     collisionPoints_.clear();
     depths_.clear();
 
-    float curAngle = ((360-angle_) * M_PI / 180) - FOV / 2;
+    float curAngle = ((360-angle_) * M_PI / 180) - sight_ / 2;
 
-    for (float a = 0; a < NUM_RAYS; a++)
+    for (float a = 0; a < raysNum_; a++)
     {
         Vector direction = {cosf(curAngle), sinf(curAngle)};
         direction.normalize();
@@ -90,7 +93,7 @@ void Camera::crossing()noexcept
                 float t = ((wallPoint1.x - rayStart.x) * (rayStart.y - rayDir.y) -
                            (wallPoint1.y - rayStart.y) * (rayStart.x - rayDir.x)) / den;
                 float u = -((wallPoint1.x - wallPoint2.x) * (wallPoint1.y - rayStart.y) -
-                          (wallPoint1.y - wallPoint2.y) * (wallPoint1.x - rayStart.x)) / den;
+                            (wallPoint1.y - wallPoint2.y) * (wallPoint1.x - rayStart.x)) / den;
 
                 if (t >= 0 && t <= 1 && u >= 0 )
                 {
@@ -99,7 +102,7 @@ void Camera::crossing()noexcept
                         bestLen = u;
 
                         bestPoint = {static_cast<float>(rayStart.x + bestLen * (rayDir.x - rayStart.x)),
-                                                   static_cast<float>(rayStart.y + bestLen * (rayDir.y - rayStart.y))};
+                                     static_cast<float>(rayStart.y + bestLen * (rayDir.y - rayStart.y))};
                         bestPointName = object.first;
                     }
                 }
@@ -108,31 +111,31 @@ void Camera::crossing()noexcept
         collisionPoints_.emplace_back(bestPointName, bestPoint);
         depths_.push_back(bestLen * cosf(((360-angle_) * M_PI / 180) - curAngle));
 
-        curAngle += FOV / NUM_RAYS;
+        curAngle += sight_ / raysNum_;
     }
 }
 
-void Camera::draw(sf::RenderTarget &window) const
+void Camera::drawSight(sf::RenderTarget &window) const
 {
-    sf::CircleShape circle(CELL_SCALE/3);
-    circle.setPosition(position_.x * CELL_SCALE, position_.y * CELL_SCALE);
+    sf::CircleShape circle(world_.getCellScale()/3);
+    circle.setPosition(position_.x * world_.getCellScale(), position_.y * world_.getCellScale());
     circle.setOutlineThickness(2);
     circle.setFillColor(sf::Color(255, 100, 196));
     circle.setOutlineColor(sf::Color(252, 248, 243));
 
     sf::ConvexShape triangle;
     triangle.setPointCount(collisionPoints_.size()+2);
-    triangle.setPoint(0, {(position_.x * CELL_SCALE + CELL_SCALE/3),
-                          (position_.y * CELL_SCALE + CELL_SCALE/3)});
+    triangle.setPoint(0, {(position_.x * world_.getCellScale() + world_.getCellScale()/3),
+                          (position_.y * world_.getCellScale() + world_.getCellScale()/3)});
 
     for(int i = 0; i < collisionPoints_.size(); i++)
     {
-        triangle.setPoint(i+1, {collisionPoints_[i].second.x * CELL_SCALE,
-                                            collisionPoints_[i].second.y * CELL_SCALE});
+        triangle.setPoint(i+1, {collisionPoints_[i].second.x * world_.getCellScale(),
+                                collisionPoints_[i].second.y * world_.getCellScale()});
     }
     triangle.setPoint(collisionPoints_.size()+1,
-                      {(position_.x * CELL_SCALE + CELL_SCALE/3),
-                             (position_.y * CELL_SCALE + CELL_SCALE/3)});
+                      {(position_.x * world_.getCellScale() + world_.getCellScale()/3),
+                             (position_.y * world_.getCellScale() + world_.getCellScale()/3)});
 
     triangle.setFillColor(sf::Color(0,0,0,0));
     triangle.setOutlineColor(sf::Color::White);
@@ -142,15 +145,15 @@ void Camera::draw(sf::RenderTarget &window) const
     window.draw(circle);
 }
 
-void Camera::drawWorld(sf::RenderTarget &window) noexcept
+void Camera::drawWorld(sf::RenderTarget &window)const noexcept
 {
-    float segmentWidth = WINDOW_WIDTH / NUM_RAYS;
+    int segmentWidth = std::ceil(ResourceManager::Window::getWindowWidth() / raysNum_);
     float segmentHeightProj = 100;
     float segmentHeight;
     sf::RectangleShape segment;
     sf::Sprite sprite;
 
-    float d = NUM_RAYS / 2*tan(FOV/2);
+    float d = raysNum_ / 2*tan(sight_/2);
 
     float offset = -10 * (angle_+1) % world_.getSkyTexture().getSize().x;
     sf::Sprite sky;
@@ -160,16 +163,17 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
     sky.setTextureRect(sf::IntRect(offset,0,world_.getSkyTexture().getSize().x,
                                    world_.getSkyTexture().getSize().y));
     window.draw(sky);
-    sky.setTextureRect(sf::IntRect(offset - WINDOW_WIDTH,0,
+    sky.setTextureRect(sf::IntRect(offset - ResourceManager::Window::getWindowWidth(),0,
                                    world_.getSkyTexture().getSize().x,world_.getSkyTexture().getSize().y));
     window.draw(sky);
-    sky.setTextureRect(sf::IntRect(offset + WINDOW_WIDTH,0,
+    sky.setTextureRect(sf::IntRect(offset + ResourceManager::Window::getWindowWidth(),0,
                                    world_.getSkyTexture().getSize().x,world_.getSkyTexture().getSize().y));
     window.draw(sky);
 
     sf::RectangleShape floor;
-    floor.setSize({WINDOW_WIDTH, WINDOW_HEIGHT/2});
-    floor.setPosition(0,(WINDOW_HEIGHT/2));
+    floor.setSize({static_cast<float>(ResourceManager::Window::getWindowWidth()),
+                   static_cast<float>(ResourceManager::Window::getWindowHeight())/2});
+    floor.setPosition(0,(ResourceManager::Window::getWindowHeight()/2));
     floor.setFillColor(sf::Color(162,101,62));
 
     window.draw(floor);
@@ -205,10 +209,11 @@ void Camera::drawWorld(sf::RenderTarget &window) noexcept
             wallTextureColumn = rayEnd.x - std::floorf(rayEnd.x);
         }
 
-        sprite.setTextureRect(sf::IntRect(round(sprite.getTexture()->getSize().x * wallTextureColumn),
-                                                   0,5, sprite.getTexture()->getSize().y));
-        sprite.setScale(0.7777,segmentHeight/sprite.getTexture()->getSize().y);
-        sprite.setPosition(i*segmentWidth, WINDOW_HEIGHT/2 - segmentHeight/2);
+        sprite.setTextureRect(sf::IntRect(sprite.getTexture()->getSize().x * wallTextureColumn,
+                                          0,ResourceManager::Window::getWindowWidth()/raysNum_, sprite.getTexture()->getSize
+                                          ().y));
+        sprite.setScale(1,segmentHeight/sprite.getTexture()->getSize().y);
+        sprite.setPosition(i*segmentWidth, ResourceManager::Window::getWindowHeight()/2 - segmentHeight/2);
 
         window.draw(sprite);
         i++;
@@ -240,6 +245,16 @@ float Camera::getMaxDist() const
     return maxDist_;
 }
 
+int Camera::getRaysNum() const
+{
+    return raysNum_;
+}
+
+float Camera::getSight() const
+{
+    return sight_;
+}
+
 std::vector<std::pair<std::string, Vector>> &Camera::getCollisionPoints()
 {
     return collisionPoints_;
@@ -248,9 +263,4 @@ std::vector<std::pair<std::string, Vector>> &Camera::getCollisionPoints()
 std::vector<float> &Camera::getDepths()
 {
     return depths_;
-}
-
-World &Camera::getWorld() const
-{
-    return world_;
 }

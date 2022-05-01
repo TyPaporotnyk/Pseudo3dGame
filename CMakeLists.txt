@@ -9,7 +9,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
-add_executable(Pseudo3DGame src/main.cpp src/World.cpp src/World.h src/2DFigures/Object2D.cpp src/2DFigures/Object2D.h src/IDrawble.h src/Vector.cpp src/Vector.h src/Camera.cpp src/Camera.h src/2DFigures/Cube.cpp src/2DFigures/Cube.h src/2DFigures/Circle.cpp src/2DFigures/Circle.h src/ResourceManager.cpp src/ResourceManager.h)
+add_executable(Pseudo3DGame src/main.cpp src/Entities/World.cpp src/Entities/World.h src/Entities/2DFigures/Object2D.cpp src/Entities/2DFigures/Object2D.h src/Resources/Vector.cpp src/Resources/Vector.h src/Entities/Camera.cpp src/Entities/Camera.h src/Entities/2DFigures/Cube.cpp src/Entities/2DFigures/Cube.h src/Entities/2DFigures/Circle.cpp src/Entities/2DFigures/Circle.h src/Core/ResourceManager.cpp src/Core/ResourceManager.h src/Core/Engine.cpp src/Core/Engine.h)
 
 if(${APPLE})
     include_directories(/usr/local/include)

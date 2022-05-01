@@ -8,8 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-#include "../IDrawble.h"
-#include "../Vector.h"
+#include "../../Resources/Vector.h"
 
 enum class Entities
 {
@@ -19,7 +18,7 @@ enum class Entities
     NONE
 };
 
-class Object2D : public virtual IDrawable
+class Object2D
 {
 protected:
     std::vector<Vector>points_;
@@ -37,10 +36,10 @@ public:
 
     std::vector<Vector>& getNodes();
 
-    void draw(sf::RenderTarget &window) const override;
+    void draw(sf::RenderTarget &window, int cellSCale) const;
 
     [[nodiscard]]const std::string &getName() const;
-    [[nodiscard]]sf::Texture &getWallTexture();
+    [[nodiscard]]sf::Texture & getWallTexture() const;
 
     [[nodiscard]]Entities getType() const;
 

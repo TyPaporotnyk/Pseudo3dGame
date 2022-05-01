@@ -7,7 +7,7 @@
 
 #include "Object2D.h"
 
-#include "../Vector.h"
+#include "../../Resources/Vector.h"
 
 class Circle :  public Object2D
 {
@@ -17,7 +17,7 @@ private:
 public:
     explicit Circle(std::string name, sf::Texture& wallTexture, Vector position = {}, float radius = 1);
 
-    void draw(sf::RenderTarget &window) const override;
+    void draw(sf::RenderTarget &window) const;
 };
 
 

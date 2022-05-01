@@ -7,7 +7,7 @@
 
 #include "Object2D.h"
 
-#include "../Vector.h"
+#include "../../Resources/Vector.h"
 
 class Cube : public Object2D
 {
@@ -18,7 +18,7 @@ public:
     explicit Cube(std::string name, sf::Texture& wallTexture, Vector position = {},
                   const std::vector<Vector>&points = {}, int scale = 1);
 
-    void draw(sf::RenderTarget &window) const override;
+    void draw(sf::RenderTarget &window) const;
 };
 
 

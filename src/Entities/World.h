@@ -8,29 +8,28 @@
 #include <vector>
 
 #include "2DFigures/Object2D.h"
-#include "IDrawble.h"
-#include "Vector.h"
+#include "../Resources/Vector.h"
 
-
-class World : public virtual IDrawable
+class World
 {
 private:
     std::map<std::string ,Object2D> objects_;
 
+    int cellScale_;
+
     sf::Texture skyTexture_;
-    sf::Sprite skySprite_;
 
     sf::Texture floorTexture_;
-    sf::Sprite floorSprite_;
 
 public:
-    explicit World(const std::string& skyTexturePath = " ",
-                  const std::string& floorTexturePath = " ")noexcept;
+    explicit World(const std::string& skyTexturePath,
+                  const std::string& floorTexturePath, int cellScale)noexcept;
 
-    Vector loadMapFromImage(const std::string& worldPath) noexcept;
     void addObject(const Object2D& object2D) noexcept;
 
-    void draw(sf::RenderTarget& window) const override;
+    void drawMap(sf::RenderTarget& window) const noexcept;
+
+    [[nodiscard]]int getCellScale() const;
 
     [[nodiscard]]std::map<std::string ,Object2D>& getObjects();
 

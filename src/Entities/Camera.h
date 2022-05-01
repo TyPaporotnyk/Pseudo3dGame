@@ -5,15 +5,16 @@
 #ifndef PSEUDO3DGAME_CAMERA_H
 #define PSEUDO3DGAME_CAMERA_H
 
-#include "IDrawble.h"
-#include "Vector.h"
+#include "../Resources/Vector.h"
 #include "World.h"
 
-class Camera : public virtual IDrawable
+class Camera
 {
 private:
     Vector position_;
     int angle_;
+    int raysNum_;
+    float sight_;
     float speed_;
     float maxDist_;
 
@@ -27,21 +28,23 @@ private:
     static float degCheck(float deg) noexcept;
 
 public:
-    explicit Camera(World& world, Vector position = {}, float speed = 5, int angle = 0, float maxDist = 20);
+    explicit Camera(World& world,Vector position, float speed, int raysNum, int sight, int angle = 0, float
+    maxDist = 25);
 
-    void control(const sf::RenderWindow& window, float dTime, bool cameraRotate) noexcept;
-    void draw(sf::RenderTarget& window) const override;
-    void drawWorld(sf::RenderTarget& window) noexcept;
+    void control(const sf::RenderWindow& window,float dTime, bool cameraRotate) noexcept;
+    void drawSight(sf::RenderTarget& window) const;
+    void drawWorld(sf::RenderTarget &window) const noexcept;
 
     [[nodiscard]]int getAngle() const;
     [[nodiscard]]float getSpeed() const;
     [[nodiscard]]float getMaxDist() const;
     [[nodiscard]]Vector getPosition() const;
+    [[nodiscard]]int getRaysNum() const;
+    [[nodiscard]]float getSight() const;
 
     [[nodiscard]]std::vector<std::pair<std::string, Vector>> &getCollisionPoints();
     [[nodiscard]]std::vector<float> &getDepths();
 
-    [[nodiscard]]World &getWorld() const;
 };
 
 

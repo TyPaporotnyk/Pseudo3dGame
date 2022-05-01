@@ -5,7 +5,6 @@
 #include "Circle.h"
 
 #include <cmath>
-#include <utility>
 
 Circle::Circle(std::string name, sf::Texture& wallTexture, Vector position, float radius) :
         Object2D(std::move(name), wallTexture, Entities::CIRCLE, position), radius_(radius)
