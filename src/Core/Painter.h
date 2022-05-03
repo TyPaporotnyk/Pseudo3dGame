@@ -2,8 +2,8 @@
 // Created by Даниил on 02.05.2022.
 //
 
-#ifndef PSEUDO3DGAME_DRAWER_H
-#define PSEUDO3DGAME_DRAWER_H
+#ifndef PSEUDO3DGAME_PAINTER_H
+#define PSEUDO3DGAME_PAINTER_H
 
 #include "../Helper/Holders/Singleton.h"
 
@@ -14,7 +14,7 @@
 
 namespace Core
 {
-    class Drawer// : public Helper::Holders::Singleton<Drawer>
+    class Painter// : public Helper::Holders::Singleton<Drawer>
     {
     public:
         static void drawMap(sf::RenderTarget& window, const World& world);
@@ -25,4 +25,4 @@ namespace Core
     };
 }
 
-#endif //PSEUDO3DGAME_DRAWER_H
+#endif //PSEUDO3DGAME_PAINTER_H

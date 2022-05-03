@@ -4,7 +4,7 @@
 
 #include "Engine.h"
 
-#include "Drawer.h"
+#include "Painter.h"
 
 #include "../Precompiler.h"
 
@@ -140,9 +140,9 @@ void Engine::render()
 {
     window->clear();
 
-    Core::Drawer::drawWorld(*window, *camera, *world);
-    Core::Drawer::drawSight(*window, *camera, *world);
-    Core::Drawer::drawMap(*window, *world);
+    Core::Painter::drawWorld(*window, *camera, *world);
+    Core::Painter::drawSight(*window, *camera, *world);
+    Core::Painter::drawMap(*window, *world);
 
     renderText();
 

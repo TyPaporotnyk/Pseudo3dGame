@@ -29,8 +29,8 @@ add_executable(Pseudo3DGame src/main.cpp
         src/Managers.h
         src/Core/Entities/Loaders/WorldLoader.cpp
         src/Core/Entities/Loaders/WorldLoader.h
-        src/Core/Drawer.cpp
-        src/Core/Drawer.h
+        src/Core/Painter.cpp
+        src/Core/Painter.h
         src/Precompiler.cpp src/Precompiler.h)
 
 if(${APPLE})

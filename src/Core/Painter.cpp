@@ -2,7 +2,7 @@
 // Created by Даниил on 02.05.2022.
 //
 
-#include "Drawer.h"
+#include "Painter.h"
 
 #include <cmath>
 
@@ -10,13 +10,13 @@
 
 #include "../Precompiler.h"
 
-void Core::Drawer::drawMap(sf::RenderTarget &window, const World &world)
+void Core::Painter::drawMap(sf::RenderTarget &window, const World &world)
 {
     for(auto obj : world.getObjects())
         obj.second.draw(window, world.getCellScale());
 }
 
-void Core::Drawer::drawWorld(sf::RenderTarget &window, const Camera &camera, const World &world)
+void Core::Painter::drawWorld(sf::RenderTarget &window, const Camera &camera, const World &world)
 {
     int segmentWidth = std::ceil(RESOURCE_MANAGER.getWindowWidth() / camera.getRaysNum());
     float segmentHeightProj = 10;
@@ -92,7 +92,7 @@ void Core::Drawer::drawWorld(sf::RenderTarget &window, const Camera &camera, con
 }
 
 
-void Core::Drawer::drawSight(sf::RenderTarget &window, const Camera &camera, const World &world)
+void Core::Painter::drawSight(sf::RenderTarget &window, const Camera &camera, const World &world)
 {
     sf::CircleShape circle(world.getCellScale()/3);
     circle.setPosition(camera.getPosition().x * world.getCellScale(), camera.getPosition().y * world.getCellScale());
