@@ -4,7 +4,9 @@
 
 #include "Engine.h"
 
-#include "ResourceManager.h"
+#include "Drawer.h"
+
+#include "../Precompiler.h"
 
 void Engine::initWindow()
 {
@@ -30,8 +32,8 @@ void Engine::initWindow()
     window->setVerticalSyncEnabled(vertical_sync_enabled);
     window->setMouseCursorVisible(false);
 
-    ResourceManager::Window::setWindowWidth(window_bounds.width);
-    ResourceManager::Window::setWindowHeight(window_bounds.height);
+    RESOURCE_MANAGER.setWindowWidth(window_bounds.width);
+    RESOURCE_MANAGER.setWindowHeight(window_bounds.height);
 }
 
 void Engine::initWorld()
@@ -48,7 +50,7 @@ void Engine::initWorld()
     ifs.close();
 
     world = new World(std::string(DATA_DIR + std::string("/texture/sky/sky.png")), "", world_scale);
-    ResourceManager::loadMapFromImage(DATA_DIR + std::string("/map/map.png"), world);
+    worldLoader.loadMap(*world, DATA_DIR + std::string("/map/map.png"));
 }
 
 void Engine::initCamera()
@@ -68,7 +70,7 @@ void Engine::initCamera()
 
     ifs.close();
 
-    camera = new Camera(*world,ResourceManager::getPlayerPosition(), speed, raysNum, sight,0);
+    camera = new Camera(*world,{10,10}, speed, raysNum, sight,0);
 }
 
 Engine::Engine()
@@ -132,16 +134,15 @@ void Engine::update()
     updateEvent();
 
     camera->control(*window, deltaTime, isPaused);
-    renderText();
 }
 
 void Engine::render()
 {
     window->clear();
 
-    camera->drawWorld(*window);
-    camera->drawSight(*window);
-    world->drawMap(*window);
+    Core::Drawer::drawWorld(*window, *camera, *world);
+    Core::Drawer::drawSight(*window, *camera, *world);
+    Core::Drawer::drawMap(*window, *world);
 
     renderText();
 

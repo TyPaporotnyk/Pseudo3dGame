@@ -6,36 +6,30 @@
 
 #include <utility>
 
-#include "../Core/ResourceManager.h"
+#include "../../Precompiler.h"
 
 World::World(const std::string& skyTexturePath,
              const std::string& floorTexturePath, int cellScale) noexcept :
-             skyTexture_(*ResourceManager::loadTexture(skyTexturePath)),
+             skyTexture_(*RESOURCE_MANAGER.loadTexture(skyTexturePath)),
 //             floorTexture_(*ResourceManager::loadTexture(floorTexturePath)),
-             cellScale_(cellScale){ }
-
-void World::addObject(const Object2D& object2D) noexcept
-{
-    objects_.insert({object2D.getName(), object2D});
-}
+             cellScale_(cellScale) {}
 
 void World::drawMap(sf::RenderTarget& window) const noexcept
 {
-    for(auto obj : objects_)
-        obj.second.draw(window, cellScale_);
+
 }
 
-std::map<std::string ,Object2D> &World::getObjects()
+const std::map<std::string ,Object2D> &World::getObjects() const
 {
     return objects_;
 }
 
-sf::Texture &World::getSkyTexture()
+const sf::Texture &World::getSkyTexture() const
 {
     return skyTexture_;
 }
 
-sf::Texture &World::getFloorTexture()
+const sf::Texture &World::getFloorTexture() const
 {
     return floorTexture_;
 }
@@ -43,4 +37,9 @@ sf::Texture &World::getFloorTexture()
 int World::getCellScale() const
 {
     return cellScale_;
+}
+
+void World::addObject(const Object2D &object2D)
+{
+    objects_.insert({object2D.getName(), object2D});
 }

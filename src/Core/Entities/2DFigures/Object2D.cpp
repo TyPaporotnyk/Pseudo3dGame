@@ -31,12 +31,7 @@ void Object2D::draw(sf::RenderTarget &window, int cellScale) const
     window.draw(figure);
 }
 
-std::vector<Vector> &Object2D::getNodes()
-{
-    return points_;
-}
-
-const std::vector<Vector> &Object2D::getPoints() const
+const std::vector<Vector> & Object2D::getNodes() const
 {
     return points_;
 }

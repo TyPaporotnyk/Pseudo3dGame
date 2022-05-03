@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-#include "../../Resources/Vector.h"
+#include "../../../Helper/Vector.h"
 
 enum class Entities
 {
@@ -34,16 +34,16 @@ public:
     explicit Object2D(std::string name, sf::Texture& wallTexture, Entities entity, Vector position = {},
                       std::vector<Vector>points = {});
 
-    std::vector<Vector>& getNodes();
+    const std::vector<Vector> & getNodes() const;
 
-    void draw(sf::RenderTarget &window, int cellSCale) const;
+    void draw(sf::RenderTarget &window, int cellSCale)  const;
 
     [[nodiscard]]const std::string &getName() const;
     [[nodiscard]]sf::Texture & getWallTexture() const;
 
     [[nodiscard]]Entities getType() const;
 
-    [[nodiscard]]const std::vector<Vector> &getPoints() const;
+//    [[nodiscard]]const std::vector<Vector> &getPoints() const;
     [[nodiscard]]const Vector &getPosition() const;
 };
 

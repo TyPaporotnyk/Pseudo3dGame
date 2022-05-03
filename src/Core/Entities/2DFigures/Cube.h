@@ -7,7 +7,7 @@
 
 #include "Object2D.h"
 
-#include "../../Resources/Vector.h"
+#include "../../../Helper/Vector.h"
 
 class Cube : public Object2D
 {

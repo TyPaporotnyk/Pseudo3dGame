@@ -5,7 +5,7 @@
 #ifndef PSEUDO3DGAME_CAMERA_H
 #define PSEUDO3DGAME_CAMERA_H
 
-#include "../Resources/Vector.h"
+#include "../../Helper/Vector.h"
 #include "World.h"
 
 class Camera
@@ -31,9 +31,7 @@ public:
     explicit Camera(World& world,Vector position, float speed, int raysNum, int sight, int angle = 0, float
     maxDist = 25);
 
-    void control(const sf::RenderWindow& window,float dTime, bool cameraRotate) noexcept;
-    void drawSight(sf::RenderTarget& window) const;
-    void drawWorld(sf::RenderTarget &window) const noexcept;
+    void control(const sf::RenderWindow& window,float dTime, bool cameraPause) noexcept;
 
     [[nodiscard]]int getAngle() const;
     [[nodiscard]]float getSpeed() const;
@@ -42,8 +40,8 @@ public:
     [[nodiscard]]int getRaysNum() const;
     [[nodiscard]]float getSight() const;
 
-    [[nodiscard]]std::vector<std::pair<std::string, Vector>> &getCollisionPoints();
-    [[nodiscard]]std::vector<float> &getDepths();
+    [[nodiscard]]const std::vector<std::pair<std::string, Vector>> &getCollisionPoints() const;
+    [[nodiscard]]const std::vector<float> &getDepths() const;
 
 };
 

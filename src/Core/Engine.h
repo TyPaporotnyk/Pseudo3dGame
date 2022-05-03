@@ -5,14 +5,22 @@
 #ifndef PSEUDO3DGAME_ENGINE_H
 #define PSEUDO3DGAME_ENGINE_H
 
-#include "../Entities/World.h"
-#include "../Entities/Camera.h"
+#include <SFML/Graphics.hpp>
+
+#include "Entities/Loaders/WorldLoader.h"
+
+#include "Entities/World.h"
+#include "Entities/Camera.h"
+
+#define world_loader Loaders::WorldLoader
 
 class Engine
 {
 private:
     sf::RenderWindow* window;
     sf::Event event;
+
+    world_loader worldLoader;
 
     World *world;
     Camera *camera;
@@ -31,7 +39,6 @@ private:
 
     void updateDTime();
     void updateEvent();
-
     void update();
 
     void render();
