@@ -5,7 +5,7 @@
 #ifndef PSEUDO3DGAME_PAINTER_H
 #define PSEUDO3DGAME_PAINTER_H
 
-#include "../Helper/Holders/Singleton.h"
+#include "Helper/Holders/Singleton.h"
 
 #include "Entities/Camera.h"
 #include "Entities/World.h"

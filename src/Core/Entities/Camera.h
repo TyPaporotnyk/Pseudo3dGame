@@ -5,23 +5,23 @@
 #ifndef PSEUDO3DGAME_CAMERA_H
 #define PSEUDO3DGAME_CAMERA_H
 
-#include "../../Helper/Vector.h"
+#include "../Helper/Vector.h"
 #include "World.h"
 
 class Camera
 {
 private:
-    Vector position_;
-    int angle_;
-    int raysNum_;
-    float sight_;
-    float speed_;
-    float maxDist_;
+    Vector _position;
+    int _angle;
+    int _raysNum;
+    float _sight;
+    float _speed;
+    float _maxDist;
 
-    std::vector<std::pair<std::string, Vector>> collisionPoints_;
-    std::vector<float> depths_;
+    std::vector<std::pair<std::string, Vector>> _collisionPoints;
+    std::vector<float> _depths;
 
-    World& world_;
+    World& _world;
 
     void crossing()noexcept;
 

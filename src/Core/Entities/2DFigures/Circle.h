@@ -7,12 +7,11 @@
 
 #include "Object2D.h"
 
-#include "../../../Helper/Vector.h"
 
 class Circle :  public Object2D
 {
 private:
-    float radius_;
+    float _radius;
 
 public:
     explicit Circle(std::string name, sf::Texture& wallTexture, Vector position = {}, float radius = 1);

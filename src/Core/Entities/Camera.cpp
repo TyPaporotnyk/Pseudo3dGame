@@ -7,12 +7,12 @@
 #include <iostream>
 #include <cmath>
 
-Camera::Camera(World& world_, Vector position, float speed, int raysNum, int sight, int angle, float maxDist) :
-world_(world_) ,position_(position), speed_(speed), raysNum_(raysNum), sight_(sight*M_PI/180), angle_(angle), maxDist_
+Camera::Camera(World& _world, Vector position, float speed, int raysNum, int sight, int angle, float maxDist) :
+_world(_world) ,_position(position), _speed(speed), _raysNum(raysNum), _sight(sight*M_PI/180), _angle(angle), _maxDist
 (maxDist)
 {
-    collisionPoints_.resize(raysNum);
-    depths_.resize(raysNum);
+    _collisionPoints.resize(raysNum);
+    _depths.resize(raysNum);
 }
 
 void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPause) noexcept
@@ -28,31 +28,31 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
 
     float rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window.getSize().x);
 
-    angle_ = degCheck(angle_ + rotationHorizontal);
+    _angle = degCheck(_angle + rotationHorizontal);
 
     sf::Mouse::setPosition(sf::Vector2i(windowCenterX, windowCenterY), window);
 
 
-    float dCos = cosf((360-angle_)*M_PI/180);
-    float dSin = sinf((360-angle_)*M_PI/180);
+    float dCos = cosf((360-_angle)*M_PI/180);
+    float dSin = sinf((360-_angle)*M_PI/180);
 
     // Keyboard check
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-        position_.x += speed_ * dCos * dTime;
-        position_.y += speed_ * dSin * dTime;
+        _position.x += _speed * dCos * dTime;
+        _position.y += _speed * dSin * dTime;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-        position_.x -= dCos * speed_ * dTime;
-        position_.y -= dSin * speed_ * dTime;
+        _position.x -= dCos * _speed * dTime;
+        _position.y -= dSin * _speed * dTime;
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-        position_.x += dSin * speed_ * dTime;
-        position_.y -= dCos * speed_ * dTime;
+        _position.x += dSin * _speed * dTime;
+        _position.y -= dCos * _speed * dTime;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-        position_.x -= dSin * speed_ * dTime;
-        position_.y += dCos * speed_ * dTime;
+        _position.x -= dSin * _speed * dTime;
+        _position.y += dCos * _speed * dTime;
     }
 
     // Crossing rays
@@ -61,18 +61,18 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
 
 void Camera::crossing()noexcept
 {
-    float curAngle = ((360-angle_) * M_PI / 180) - sight_ / 2;
+    float curAngle = ((360-_angle) * M_PI / 180) - _sight / 2;
 
-    for (float a = 0; a < raysNum_; a++)
+    for (float a = 0; a < _raysNum; a++)
     {
         Vector direction = {cosf(curAngle), sinf(curAngle)};
         direction.normalize();
 
-        float bestLen = maxDist_;
+        float bestLen = _maxDist;
         std::string bestPointName;
-        Vector bestPoint = {(position_.x  + direction.x  * bestLen), (position_.y + direction.y * bestLen)};
+        Vector bestPoint = {(_position.x  + direction.x  * bestLen), (_position.y + direction.y * bestLen)};
 
-        for(auto& object : world_.getObjects())
+        for(auto& object : _world.getObjects())
         {
             for(int i = 0; i < object.second.getNodes().size(); i++)
             {
@@ -82,7 +82,7 @@ void Camera::crossing()noexcept
                 Vector wallPoint1 = object.second.getNodes()[x1];
                 Vector wallPoint2 = object.second.getNodes()[x2];
 
-                Vector rayStart = position_;
+                Vector rayStart = _position;
                 Vector rayDir = rayStart + direction;
 
                 float den = (wallPoint1.x - wallPoint2.x) * (rayStart.y - rayDir.y) -
@@ -111,16 +111,16 @@ void Camera::crossing()noexcept
                 }
             }
         }
-        collisionPoints_[a] = {bestPointName, bestPoint};
-        depths_[a] = (bestLen * cosf(((360-angle_) * M_PI / 180) - curAngle));
+        _collisionPoints[a] = {bestPointName, bestPoint};
+        _depths[a] = (bestLen * cosf(((360-_angle) * M_PI / 180) - curAngle));
 
-        curAngle += sight_ / raysNum_;
+        curAngle += _sight / _raysNum;
     }
 }
 
 Vector Camera::getPosition() const
 {
-    return position_;
+    return _position;
 }
 
 float Camera::degCheck(float deg) noexcept
@@ -130,35 +130,35 @@ float Camera::degCheck(float deg) noexcept
 
 int Camera::getAngle() const
 {
-    return angle_;
+    return _angle;
 }
 
 float Camera::getSpeed() const
 {
-    return speed_;
+    return _speed;
 }
 
 float Camera::getMaxDist() const
 {
-    return maxDist_;
+    return _maxDist;
 }
 
 int Camera::getRaysNum() const
 {
-    return raysNum_;
+    return _raysNum;
 }
 
 float Camera::getSight() const
 {
-    return sight_;
+    return _sight;
 }
 
 const std::vector<std::pair<std::string, Vector>> &Camera::getCollisionPoints() const
 {
-    return collisionPoints_;
+    return _collisionPoints;
 }
 
 const std::vector<float> &Camera::getDepths() const
 {
-    return depths_;
+    return _depths;
 }

@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-#include "../../../Helper/Vector.h"
+#include "../../Helper/Vector.h"
 
 enum class Entities
 {
@@ -21,30 +21,30 @@ enum class Entities
 class Object2D
 {
 protected:
-    std::vector<Vector>points_;
-    Vector position_;
+    std::vector<Vector> _points;
+    Vector _position;
 
-    std::string name_;
+    std::string _name;
 
-    sf::Texture& wallTexture_;
+    sf::Texture& _wallTexture;
 
-    Entities entity_;
+    Entities _entity;
 
 public:
     explicit Object2D(std::string name, sf::Texture& wallTexture, Entities entity, Vector position = {},
                       std::vector<Vector>points = {});
 
-    const std::vector<Vector> & getNodes() const;
+    [[nodiscard]] const std::vector<Vector>& getNodes() const;
 
-    void draw(sf::RenderTarget &window, int cellSCale)  const;
+    void draw(sf::RenderTarget& window, int cellSCale)  const;
 
-    [[nodiscard]]const std::string &getName() const;
-    [[nodiscard]]sf::Texture & getWallTexture() const;
+    [[nodiscard]] const std::string& getName() const;
+    [[nodiscard]] sf::Texture& getWallTexture() const;
 
-    [[nodiscard]]Entities getType() const;
+    [[nodiscard]] Entities getType() const;
 
 //    [[nodiscard]]const std::vector<Vector> &getPoints() const;
-    [[nodiscard]]const Vector &getPosition() const;
+    [[nodiscard]] const Vector& getPosition() const;
 };
 
 

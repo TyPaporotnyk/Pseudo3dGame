@@ -7,12 +7,10 @@
 
 #include "Object2D.h"
 
-#include "../../../Helper/Vector.h"
-
 class Cube : public Object2D
 {
 private:
-    int scale_;
+    int _scale;
 
 public:
     explicit Cube(std::string name, sf::Texture& wallTexture, Vector position = {},

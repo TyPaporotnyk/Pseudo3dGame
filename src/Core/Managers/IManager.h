@@ -11,7 +11,7 @@ namespace Core::Managers
     template<class T>
     struct IManager
     {
-        void initialize();
+        virtual void initialize();
     };
 
     template <class T>

@@ -14,7 +14,7 @@ add_executable(Pseudo3DGame src/main.cpp
         src/Core/Entities/World.h
         src/Core/Entities/2DFigures/Object2D.cpp
         src/Core/Entities/2DFigures/Object2D.h
-        src/Helper/Vector.cpp src/Helper/Vector.h
+        src/Core/Helper/Vector.cpp src/Core/Helper/Vector.h
         src/Core/Entities/Camera.cpp
         src/Core/Entities/Camera.h
         src/Core/Entities/2DFigures/Cube.cpp
@@ -24,7 +24,7 @@ add_executable(Pseudo3DGame src/main.cpp
         src/Core/Managers/ResourceManager.cpp
         src/Core/Managers/ResourceManager.h
         src/Core/Engine.cpp src/Core/Engine.h
-        src/Helper/Holders/Singleton.h
+        src/Core/Helper/Holders/Singleton.h
         src/Core/Managers/IManager.h
         src/Managers.h
         src/Core/Entities/Loaders/WorldLoader.cpp

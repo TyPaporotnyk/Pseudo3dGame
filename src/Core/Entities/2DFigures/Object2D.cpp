@@ -8,9 +8,9 @@
 
 Object2D::Object2D(std::string name, sf::Texture& wallTexture, Entities entity, Vector position,
                    std::vector<Vector>points) :
-name_(std::move(name)), wallTexture_(wallTexture), entity_(entity), position_(position), points_(std::move(points))
+_name(std::move(name)), _wallTexture(wallTexture), _entity(entity), _position(position), _points(std::move(points))
 {
-    for(auto& p : this->points_)
+    for(auto& p : this->_points)
     {
         p += position;
     }
@@ -19,11 +19,11 @@ name_(std::move(name)), wallTexture_(wallTexture), entity_(entity), position_(po
 void Object2D::draw(sf::RenderTarget &window, int cellScale) const
 {
     sf::ConvexShape figure;
-    figure.setPointCount(points_.size());
+    figure.setPointCount(_points.size());
 
-    for(int i = 0; i < points_.size(); i++)
+    for(int i = 0; i < _points.size(); i++)
     {
-        figure.setPoint(i, {points_[i].x * cellScale, points_[i].y * cellScale});
+        figure.setPoint(i, {_points[i].x * cellScale, _points[i].y * cellScale});
     }
 
     figure.setFillColor(sf::Color(255, 228, 196));
@@ -33,25 +33,25 @@ void Object2D::draw(sf::RenderTarget &window, int cellScale) const
 
 const std::vector<Vector> & Object2D::getNodes() const
 {
-    return points_;
+    return _points;
 }
 
 const Vector &Object2D::getPosition() const
 {
-    return position_;
+    return _position;
 }
 
 const std::string &Object2D::getName() const
 {
-    return name_;
+    return _name;
 }
 
 sf::Texture & Object2D::getWallTexture() const
 {
-    return wallTexture_;
+    return _wallTexture;
 }
 
 Entities Object2D::getType() const
 {
-    return entity_;
+    return _entity;
 }

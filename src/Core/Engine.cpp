@@ -31,9 +31,6 @@ void Engine::initWindow()
     window->setFramerateLimit(frame_limit);
     window->setVerticalSyncEnabled(vertical_sync_enabled);
     window->setMouseCursorVisible(false);
-
-    RESOURCE_MANAGER.setWindowWidth(window_bounds.width);
-    RESOURCE_MANAGER.setWindowHeight(window_bounds.height);
 }
 
 void Engine::initWorld()
@@ -49,7 +46,8 @@ void Engine::initWorld()
 
     ifs.close();
 
-    world = new World(std::string(DATA_DIR + std::string("/texture/sky/sky.png")), "", world_scale);
+    world = new World(std::string(DATA_DIR + std::string("/texture/sky/sky.png")), "", world_scale,
+                      window->getSize().x, window->getSize().y);
     worldLoader.loadMap(*world, DATA_DIR + std::string("/map/map.png"));
 }
 
@@ -81,10 +79,8 @@ Engine::Engine()
 
     isPaused = false;
 
-    font.loadFromFile(DATA_DIR + std::string("/font/font.ttf"));
-
-    text.setFont(font);
-    text.setPosition(world->getCellScale(),20*world->getCellScale() + world->getCellScale());
+    text.setFont(*RESOURCE_MANAGER.loadFont(std::string(DATA_DIR + std::string("/font/font.ttf"))));
+    text.setPosition(world->getCellScale(),(20*world->getCellScale())+world->getCellScale());
     text.setCharacterSize(24);
 }
 

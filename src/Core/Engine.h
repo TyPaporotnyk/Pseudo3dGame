@@ -28,7 +28,6 @@ private:
     bool isPaused;
 
     sf::Text text;
-    sf::Font font;
 
     sf::Clock clock;
     float deltaTime;

@@ -12,11 +12,9 @@
 
 #include "IManager.h"
 
-#include "../../Helper/Holders/Singleton.h"
+#include "../Helper/Holders/Singleton.h"
 
-#include "../Entities/World.h"
-
-#include "../../Helper/Vector.h"
+#include "../Helper/Vector.h"
 
 
 namespace Core::Managers
@@ -25,19 +23,13 @@ namespace Core::Managers
     {
     private:
         std::map<std::string, std::shared_ptr<sf::Texture>> _textures;
-        int windowWidth = 0;
-        int windowHeight = 0;
+        std::map<std::string, std::shared_ptr<sf::Font>> _fonts;
 
     public:
-        void initialize();
-
-        int getWindowWidth() const;
-        int getWindowHeight() const;
-
-        void setWindowWidth(int width);
-        void setWindowHeight(int height);
+        void initialize() override;
 
         sf::Texture* loadTexture(const std::string& filename);
+        sf::Font* loadFont(const std::string& filename);
     };
 }
 

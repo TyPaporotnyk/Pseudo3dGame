@@ -15,9 +15,9 @@
 
 # Building & Running
 ```
-cmake -B cmake-build -DCMAKE_BUILD_TYPE=Release
-cmake --build cmake-build
-cmake --build cmake-build --target release
+cmake -B cmake-build-release -DCMAKE_BUILD_TYPE=Release
+cmake --build cmake-build-release
+cmake --build cmake-build-release --target release
 ```
 
 # Control
