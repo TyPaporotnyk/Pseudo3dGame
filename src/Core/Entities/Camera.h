@@ -34,8 +34,6 @@ public:
     explicit Camera(World& world,Vector position, float speed, int raysNum, int sight, int angle = 0, float
     maxDist = 25);
 
-
-
     void control(const sf::RenderWindow& window,float dTime, bool cameraPause) noexcept;
 
     [[nodiscard]]int getAngle() const;

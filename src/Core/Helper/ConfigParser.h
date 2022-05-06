@@ -17,49 +17,15 @@ private:
     std::map<std::string, std::string> elements;
 
 public:
-    void parse(const std::string& path)
-    {
-        stream.open(path);
+    void parse(const std::string& path);
 
-        if(!stream.is_open())
-            std::cout << "File is not open!" << std::endl;
+    std::string lookupString(const std::string& name);
 
-        std::string delimiter = "=";
-        std::string str;
+    int lookupInt(const std::string& name);
 
-        while(std::getline(stream, str))
-        {
-            std::string name;
-            std::string value;
+    float lookupFloat(const std::string& name);
 
-            name = str.substr(0,str.find(delimiter));
-            value = str.substr(str.find(delimiter)+1, str.length()-1);
-
-            elements.insert({name, value});
-        }
-
-        stream.close();
-    }
-
-    std::string lookupString(const std::string& name)
-    {
-        return elements.find(name)->second;
-    }
-
-    int lookupInt(const std::string& name)
-    {
-        return std::stoi(elements.find(name)->second);
-    }
-
-    float lookupFloat(const std::string& name)
-    {
-        return std::stof(elements.find(name)->second);
-    }
-
-    bool lookupBool(const std::string& name)
-    {
-        return elements.find(name)->second == "true" || elements.find(name)->second == "1";
-    }
+    bool lookupBool(const std::string& name);
 };
 
 

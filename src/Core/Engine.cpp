@@ -17,7 +17,7 @@ void Engine::initWindow()
     unsigned frame_limit = 60;
     bool vertical_sync_enabled = false;
 
-    ConfigParser* windowParser = new ConfigParser;
+    auto* windowParser = new ConfigParser;
     windowParser->parse(DATA_DIR + std::string("/config/windowConfig.ini"));
 
 
@@ -40,7 +40,7 @@ void Engine::initWorld()
 {
     int world_scale = 16;
 
-    ConfigParser* worldParser = new ConfigParser;
+    auto* worldParser = new ConfigParser;
     worldParser->parse(DATA_DIR + std::string("/config/worldConfig.ini"));
 
     world_scale = worldParser->lookupInt("cellScale");
@@ -57,15 +57,22 @@ void Engine::initCamera()
     float speed = 2;
     int raysNum = 100;
     int sight = 60;
+    float startPosX = 10;
+    float startPosY = 12;
+    int startAngle = 90;
 
-    ConfigParser* cameraParser = new ConfigParser;
+    auto* cameraParser = new ConfigParser;
     cameraParser->parse(DATA_DIR + std::string("/config/playerConfig.ini"));
 
-    speed   = cameraParser->lookupFloat("speed");
-    raysNum = cameraParser->lookupInt("raysNum");
-    sight   = cameraParser->lookupInt("sight");
+    speed      = cameraParser->lookupFloat("speed");
+    raysNum    = cameraParser->lookupInt("raysNum");
+    sight      = cameraParser->lookupInt("sight");
+    startPosX  = cameraParser->lookupFloat("startPosX");
+    startPosY  = cameraParser->lookupFloat("startPosY");
+    startAngle = cameraParser->lookupInt("startAngle");
 
-    camera = new Camera(*world,{10,10}, speed, raysNum, sight,0);
+
+    camera = new Camera(*world,{startPosX,startPosY}, speed, raysNum, sight,startAngle);
 
     delete cameraParser;
 }
