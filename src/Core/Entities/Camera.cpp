@@ -7,6 +7,8 @@
 #include <iostream>
 #include <cmath>
 
+//#define MULTITHREADING
+
 Camera::Camera(World& _world, Vector position, float speed, int raysNum, int sight, int angle, float maxDist) :
 _world(_world) ,_position(position), _speed(speed), _raysNum(raysNum), _sight(sight*M_PI/180), _angle(angle), _maxDist
 (maxDist)
@@ -56,74 +58,79 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
     }
 
     // Crossing rays thread
-//    for(unsigned int i = 0; i < _threads.size(); i++)
-//    {
-//        _threads[i] = std::thread([this](int raysNum, float sightStart, int b) noexcept
-//        {
-//            float curAngle = (((360-_angle) * M_PI / 180) - _sight / 2) + sightStart;
-//
-//            for (float a = 0; a < raysNum; a++)
-//            {
-//                Vector direction = {cosf(curAngle), sinf(curAngle)};
-//                direction.normalize();
-//
-//                float bestLen = _maxDist;
-//                std::string bestPointName;
-//                Vector bestPoint = {(_position.x  + direction.x  * bestLen), (_position.y + direction.y * bestLen)};
-//
-//                for(auto& object : _world.getObjects())
-//                {
-//                    for(int i = 0; i < object.second->getNodes().size(); i++)
-//                    {
-//                        int x1 = i % object.second->getNodes().size();
-//                        int x2 = (i + 1) % object.second->getNodes().size();
-//
-//                        Vector wallPoint1 = object.second->getNodes()[x1];
-//                        Vector wallPoint2 = object.second->getNodes()[x2];
-//
-//                        Vector rayStart = _position;
-//                        Vector rayDir = rayStart + direction;
-//
-//                        float den = (wallPoint1.x - wallPoint2.x) * (rayStart.y - rayDir.y) -
-//                                    (wallPoint1.y - wallPoint2.y) * (rayStart.x - rayDir.x);
-//
-//                        if (den == 0)
-//                        {
-//                            continue;
-//                        }
-//
-//                        float t = ((wallPoint1.x - rayStart.x) * (rayStart.y - rayDir.y) -
-//                                   (wallPoint1.y - rayStart.y) * (rayStart.x - rayDir.x)) / den;
-//                        float u = -((wallPoint1.x - wallPoint2.x) * (wallPoint1.y - rayStart.y) -
-//                                    (wallPoint1.y - wallPoint2.y) * (wallPoint1.x - rayStart.x)) / den;
-//
-//                        if (t >= 0 && t <= 1 && u >= 0 )
-//                        {
-//                            if (u < bestLen)
-//                            {
-//                                bestLen = u;
-//
-//                                bestPoint = {static_cast<float>(rayStart.x + bestLen * (rayDir.x - rayStart.x)),
-//                                             static_cast<float>(rayStart.y + bestLen * (rayDir.y - rayStart.y))};
-//                                bestPointName = object.first;
-//                            }
-//                        }
-//                    }
-//                }
-//                _collisionPoints[b+a] = {bestPointName, bestPoint};
-//                _depths[b+a] = (bestLen * cosf(((360-_angle) * M_PI / 180) - curAngle));
-//
-//                curAngle += _sight / _raysNum;
-//            }
-//        }, _raysNum/_threads.size(), ((_sight / _raysNum)*(_raysNum/_threads.size()))*i, _raysNum/_threads.size()*i);
-//    }
-//
-//    for (auto& t:_threads)
-//    {
-//        t.join();
-//    }
+#ifdef MULTITHREADING
+    for(unsigned int i = 0; i < _threads.size(); i++)
+    {
+        _threads[i] = std::thread([this](int raysNum, float sightStart, int b) noexcept
+        {
+            float curAngle = (((360-_angle) * M_PI / 180) - _sight / 2) + sightStart;
 
+            for (float a = 0; a < raysNum; a++)
+            {
+                Vector direction = {cosf(curAngle), sinf(curAngle)};
+                direction.normalize();
+
+                float bestLen = _maxDist;
+                std::string bestPointName;
+                Vector bestPoint = {(_position.x  + direction.x  * bestLen), (_position.y + direction.y * bestLen)};
+
+                for(auto& object : _world.getObjects())
+                {
+                    for(int i = 0; i < object.second->getNodes().size(); i++)
+                    {
+                        int x1 = i % object.second->getNodes().size();
+                        int x2 = (i + 1) % object.second->getNodes().size();
+
+                        Vector wallPoint1 = object.second->getNodes()[x1];
+                        Vector wallPoint2 = object.second->getNodes()[x2];
+
+                        Vector rayStart = _position;
+                        Vector rayDir = rayStart + direction;
+
+                        float den = (wallPoint1.x - wallPoint2.x) * (rayStart.y - rayDir.y) -
+                                    (wallPoint1.y - wallPoint2.y) * (rayStart.x - rayDir.x);
+
+                        if (den == 0)
+                        {
+                            continue;
+                        }
+
+                        float t = ((wallPoint1.x - rayStart.x) * (rayStart.y - rayDir.y) -
+                                   (wallPoint1.y - rayStart.y) * (rayStart.x - rayDir.x)) / den;
+                        float u = -((wallPoint1.x - wallPoint2.x) * (wallPoint1.y - rayStart.y) -
+                                    (wallPoint1.y - wallPoint2.y) * (wallPoint1.x - rayStart.x)) / den;
+
+                        if (t >= 0 && t <= 1 && u >= 0 )
+                        {
+                            if (u < bestLen)
+                            {
+                                bestLen = u;
+
+                                bestPoint = {static_cast<float>(rayStart.x + bestLen * (rayDir.x - rayStart.x)),
+                                             static_cast<float>(rayStart.y + bestLen * (rayDir.y - rayStart.y))};
+                                bestPointName = object.first;
+                            }
+                        }
+                    }
+                }
+                _collisionPoints[b+a] = {bestPointName, bestPoint};
+                _depths[b+a] = (bestLen * cosf(((360-_angle) * M_PI / 180) - curAngle));
+
+                curAngle += _sight / _raysNum;
+            }
+        }, _raysNum/_threads.size(), ((_sight / _raysNum)*(_raysNum/_threads.size()))*i, _raysNum/_threads.size()*i);
+    }
+
+    for (auto& t:_threads)
+    {
+        t.join();
+    }
+#endif
+
+    // Crossing rays without thread
+#ifndef MULTITHREADING
     crossing();
+#endif
 }
 
 void Camera::crossing()noexcept
