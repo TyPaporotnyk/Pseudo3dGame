@@ -31,7 +31,7 @@ add_executable(Pseudo3DGame src/main.cpp
         src/Core/Entities/Loaders/WorldLoader.h
         src/Core/Painter.cpp
         src/Core/Painter.h
-        src/Precompiler.cpp src/Precompiler.h)
+        src/Precompiler.cpp src/Precompiler.h src/Core/Helper/ConfigParser.cpp src/Core/Helper/ConfigParser.h)
 
 if(${APPLE})
     include_directories(/usr/local/include)

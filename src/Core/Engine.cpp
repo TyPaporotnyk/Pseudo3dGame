@@ -6,6 +6,8 @@
 
 #include "Painter.h"
 
+#include "Helper/ConfigParser.h"
+
 #include "../Precompiler.h"
 
 void Engine::initWindow()
@@ -15,40 +17,39 @@ void Engine::initWindow()
     unsigned frame_limit = 60;
     bool vertical_sync_enabled = false;
 
-    std::ifstream ifs(DATA_DIR + std::string("/config/windowConfig.ini"));
+    ConfigParser* windowParser = new ConfigParser;
+    windowParser->parse(DATA_DIR + std::string("/config/windowConfig.ini"));
 
-    if(ifs.is_open())
-    {
-        std::getline(ifs, title);
-        ifs >> window_bounds.width >> window_bounds.height;
-        ifs >> frame_limit;
-        ifs >> vertical_sync_enabled;
-    }
 
-    ifs.close();
+    title                 = windowParser->lookupString("name");
+    window_bounds.width   = windowParser->lookupInt("windowWidth");
+    window_bounds.height  = windowParser->lookupInt("windowHeight");
+    frame_limit           = windowParser->lookupInt("maxFps");
+    vertical_sync_enabled = windowParser->lookupBool("verticalSync");
+
 
     window = new sf::RenderWindow(window_bounds, title);
     window->setFramerateLimit(frame_limit);
     window->setVerticalSyncEnabled(vertical_sync_enabled);
     window->setMouseCursorVisible(false);
+
+    delete windowParser;
 }
 
 void Engine::initWorld()
 {
     int world_scale = 16;
 
-    std::ifstream ifs(DATA_DIR + std::string("/config/worldConfig.ini"));
+    ConfigParser* worldParser = new ConfigParser;
+    worldParser->parse(DATA_DIR + std::string("/config/worldConfig.ini"));
 
-    if(ifs.is_open())
-    {
-        ifs >> world_scale;
-    }
-
-    ifs.close();
+    world_scale = worldParser->lookupInt("cellScale");
 
     world = new World(std::string(DATA_DIR + std::string("/texture/sky/sky.png")), "", world_scale,
                       window->getSize().x, window->getSize().y);
     worldLoader.loadMap(*world, DATA_DIR + std::string("/map/map.png"));
+
+    delete worldParser;
 }
 
 void Engine::initCamera()
@@ -57,18 +58,16 @@ void Engine::initCamera()
     int raysNum = 100;
     int sight = 60;
 
-    std::ifstream ifs(DATA_DIR + std::string("/config/playerConfig.ini"));
+    ConfigParser* cameraParser = new ConfigParser;
+    cameraParser->parse(DATA_DIR + std::string("/config/playerConfig.ini"));
 
-    if(ifs.is_open())
-    {
-        ifs >> speed;
-        ifs >> raysNum;
-        ifs >> sight;
-    }
-
-    ifs.close();
+    speed   = cameraParser->lookupFloat("speed");
+    raysNum = cameraParser->lookupInt("raysNum");
+    sight   = cameraParser->lookupInt("sight");
 
     camera = new Camera(*world,{10,10}, speed, raysNum, sight,0);
+
+    delete cameraParser;
 }
 
 Engine::Engine()
