@@ -26,5 +26,4 @@ cmake --build cmake-build-release --target release
 | Move                 | WASD keys       |
 | Rotation             | Mouse movement  |
 | Exit                 | Q key           |
-| Show or hide map     | M key           |
 | Pause                | Esc             |
