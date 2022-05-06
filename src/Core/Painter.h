@@ -14,9 +14,9 @@
 
 namespace Core
 {
-    class Painter// : public Helper::Holders::Singleton<Drawer>
+    struct Painter// : public Helper::Holders::Singleton<Drawer>
     {
-    public:
+        Painter() = delete;
         static void drawMap(sf::RenderTarget& window, const World& world);
 
         static void drawWorld(sf::RenderTarget &window, const Camera &camera, const World &world);

@@ -5,8 +5,6 @@
 #ifndef PSEUDO3DGAME_WORLD_H
 #define PSEUDO3DGAME_WORLD_H
 
-//#define world_loader Core::Entities::Loaders::WorldLoader
-
 #include <vector>
 
 #include "2DFigures/Object2D.h"
@@ -18,7 +16,7 @@
 class World
 {
 private:
-    std::map<std::string ,Object2D> _objects;
+    mutable std::map<std::string ,std::shared_ptr<Object2D>> _objects;
 
     int _windowWidth;
     int _windowHeight;
@@ -32,7 +30,9 @@ public:
     explicit World(const std::string& skyTexturePath,
                   const std::string& floorTexturePath, int cellScale, int windowWidth, int windowHeight)noexcept;
 
-    void addObject(const Object2D& object2D);
+    ~World();
+
+    void addObject(std::shared_ptr<Object2D> object2D);
 
     void drawMap(sf::RenderTarget& window) const noexcept;
 
@@ -42,7 +42,7 @@ public:
 
     [[nodiscard]] int getWindowHeight() const;
 
-    [[nodiscard]] const std::map<std::string ,Object2D>& getObjects() const;
+    [[nodiscard]] const std::map<std::string, std::shared_ptr<Object2D>>& getObjects() const;
 
     [[nodiscard]] const sf::Texture &getSkyTexture() const;
     [[nodiscard]] const sf::Texture &getFloorTexture() const;

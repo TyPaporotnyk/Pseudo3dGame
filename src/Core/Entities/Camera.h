@@ -8,6 +8,8 @@
 #include "../Helper/Vector.h"
 #include "World.h"
 
+#include <thread>
+
 class Camera
 {
 private:
@@ -18,8 +20,9 @@ private:
     float _speed;
     float _maxDist;
 
-    std::vector<std::pair<std::string, Vector>> _collisionPoints;
-    std::vector<float> _depths;
+    mutable std::vector<std::pair<std::string, Vector>> _collisionPoints;
+    std::vector<std::thread> _threads;
+    mutable std::vector<float> _depths;
 
     World& _world;
 
@@ -30,6 +33,8 @@ private:
 public:
     explicit Camera(World& world,Vector position, float speed, int raysNum, int sight, int angle = 0, float
     maxDist = 25);
+
+
 
     void control(const sf::RenderWindow& window,float dTime, bool cameraPause) noexcept;
 

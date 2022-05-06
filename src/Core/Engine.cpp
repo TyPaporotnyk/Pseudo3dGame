@@ -47,7 +47,7 @@ void Engine::initWorld()
 
     world = new World(std::string(DATA_DIR + std::string("/texture/sky/sky.png")), "", world_scale,
                       window->getSize().x, window->getSize().y);
-    worldLoader.loadMap(*world, DATA_DIR + std::string("/map/map.png"));
+    Loaders::WorldLoader::loadMap(*world, DATA_DIR + std::string("/map/map.png"));
 
     delete worldParser;
 }
@@ -86,6 +86,8 @@ Engine::Engine()
 Engine::~Engine()
 {
     delete window;
+    delete world;
+    delete camera;
 }
 
 void Engine::updateDTime()

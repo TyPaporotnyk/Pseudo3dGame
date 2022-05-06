@@ -11,10 +11,11 @@ class World;
 
 namespace Loaders
 {
-    class WorldLoader
+
+    struct WorldLoader
     {
-    public:
-        void loadMap(World &world, const std::string &path);
+        WorldLoader() = delete;
+        static void loadMap(World &world, const std::string &path);
 
     };
 }

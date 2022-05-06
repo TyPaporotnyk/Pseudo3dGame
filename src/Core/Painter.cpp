@@ -11,7 +11,7 @@
 void Core::Painter::drawMap(sf::RenderTarget &window, const World &world)
 {
     for(auto obj : world.getObjects())
-        obj.second.draw(window, world.getCellScale());
+        obj.second->draw(window, world.getCellScale());
 }
 
 void Core::Painter::drawWorld(sf::RenderTarget &window, const Camera &camera, const World &world)
@@ -63,10 +63,10 @@ void Core::Painter::drawWorld(sf::RenderTarget &window, const Camera &camera, co
 
         Vector rayEnd = wall.second;
 
-        if(entity != world.getObjects().find(wall.first)->second.getType())
+        if(entity != world.getObjects().find(wall.first)->second->getType())
         {
-            sprite.setTexture(world.getObjects().find(wall.first)->second.getWallTexture());
-            entity = world.getObjects().find(wall.first)->second.getType();
+            sprite.setTexture(world.getObjects().find(wall.first)->second->getWallTexture());
+            entity = world.getObjects().find(wall.first)->second->getType();
         }
 
         if (abs(rayEnd.x - round(rayEnd.x)) < abs(rayEnd.y - round(rayEnd.y)))

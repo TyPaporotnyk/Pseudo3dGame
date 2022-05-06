@@ -20,7 +20,7 @@ void World::drawMap(sf::RenderTarget& window) const noexcept
 
 }
 
-const std::map<std::string ,Object2D> &World::getObjects() const
+const std::map<std::string ,std::shared_ptr<Object2D>> &World::getObjects() const
 {
     return _objects;
 }
@@ -40,9 +40,9 @@ int World::getCellScale() const
     return cellScale_;
 }
 
-void World::addObject(const Object2D &object2D)
+void World::addObject(std::shared_ptr<Object2D> object2D)
 {
-    _objects.insert({object2D.getName(), object2D});
+    _objects.insert({object2D->getName(), object2D});
 }
 
 int World::getWindowWidth() const
@@ -53,4 +53,9 @@ int World::getWindowWidth() const
 int World::getWindowHeight() const
 {
     return _windowHeight;
+}
+
+World::~World()
+{
+
 }

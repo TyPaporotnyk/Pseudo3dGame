@@ -26,10 +26,11 @@ void Loaders::WorldLoader::loadMap(World &world, const std::string &path)
             if ((i == 1 && j == 1) || (i == 1 && j == cell_width - 1) ||
                 (i == cell_height - 1 && j == 1) || (i == cell_height - 1 && j == cell_width - 1))
             {
-                Circle circle(std::to_string(i + 1) + ":" + std::to_string(j + 1) + "-Circle",
+                std::shared_ptr<Object2D> circle( new Circle(std::to_string(i + 1) + ":" + std::to_string(j + 1) +
+                "-Circle",
                               *RESOURCE_MANAGER.loadTexture(std::string(DATA_DIR + std::string("/texture/woodWall1"
                                                                          ".jpg"))),
-                              {static_cast<float>(i), static_cast<float>(j)});
+                              {static_cast<float>(i), static_cast<float>(j)}));
                 world.addObject(circle);
             }
 
@@ -37,10 +38,10 @@ void Loaders::WorldLoader::loadMap(World &world, const std::string &path)
 
             if (pixel == sf::Color(0, 0, 0))
             {
-                Cube cube(std::to_string(i + 1) + ":" + std::to_string(j + 1) + "-Cube",
+                std::shared_ptr<Object2D> cube( new Cube(std::to_string(i + 1) + ":" + std::to_string(j + 1) + "-Cube",
                           *RESOURCE_MANAGER.loadTexture(
                                   std::string(DATA_DIR + std::string("/texture/wall2.png"))),
-                          {static_cast<float>(i), static_cast<float>(j)});
+                          {static_cast<float>(i), static_cast<float>(j)}));
                 world.addObject(cube);
             } else if (pixel == sf::Color(0, 0, 255))
             {

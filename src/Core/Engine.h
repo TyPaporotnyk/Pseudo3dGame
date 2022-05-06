@@ -12,15 +12,11 @@
 #include "Entities/World.h"
 #include "Entities/Camera.h"
 
-#define world_loader Loaders::WorldLoader
-
 class Engine
 {
 private:
     sf::RenderWindow* window;
     sf::Event event;
-
-    world_loader worldLoader;
 
     World *world;
     Camera *camera;
