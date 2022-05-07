@@ -28,8 +28,8 @@ void Loaders::WorldLoader::loadMap(World &world, const std::string &path)
             {
                 std::shared_ptr<Object2D> circle( new Circle(std::to_string(i + 1) + ":" + std::to_string(j + 1) +
                 "-Circle",
-                              *RESOURCE_MANAGER.loadTexture(std::string(DATA_DIR + std::string("/texture/woodWall1"
-                                                                         ".jpg"))),
+                              *RESOURCE_MANAGER.loadTexture(std::string(DATA_DIR + std::string
+                              ("/texture/walls/woodPlanks.png"))),
                               {static_cast<float>(i), static_cast<float>(j)}));
                 world.addObject(circle);
             }
@@ -40,7 +40,7 @@ void Loaders::WorldLoader::loadMap(World &world, const std::string &path)
             {
                 std::shared_ptr<Object2D> cube( new Cube(std::to_string(i + 1) + ":" + std::to_string(j + 1) + "-Cube",
                           *RESOURCE_MANAGER.loadTexture(
-                                  std::string(DATA_DIR + std::string("/texture/wall2.png"))),
+                                  std::string(DATA_DIR + std::string("/texture/walls/bricks.png"))),
                           {static_cast<float>(i), static_cast<float>(j)}));
                 world.addObject(cube);
             } else if (pixel == sf::Color(0, 0, 255))

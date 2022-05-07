@@ -9,7 +9,8 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
-add_executable(Pseudo3DGame src/main.cpp
+add_executable(Pseudo3DGame
+        src/main.cpp
         src/Core/Entities/World.cpp
         src/Core/Entities/World.h
         src/Core/Entities/2DFigures/Object2D.cpp
@@ -31,10 +32,14 @@ add_executable(Pseudo3DGame src/main.cpp
         src/Core/Entities/Loaders/WorldLoader.h
         src/Core/Painter.cpp
         src/Core/Painter.h
-        src/Precompiler.cpp src/Precompiler.h src/Core/Helper/ConfigParser.cpp src/Core/Helper/ConfigParser.h)
+        src/Precompiler.cpp
+        src/Precompiler.h
+        src/Core/Helper/ConfigParser.cpp
+        src/Core/Helper/ConfigParser.h)
 
 if(${APPLE})
-    include_directories(/usr/local/include)
+#    include_directories(/usr/local/include)
+    include_directories(${CMAKE_SOURCE_DIR}/libs/build/CMakeFiles)
 else()
     set(SFML_DIR "C:/Libraries/SFML/lib/cmake/SFML")
     set(SFML_STATIC_LIBRARIES TRUE)

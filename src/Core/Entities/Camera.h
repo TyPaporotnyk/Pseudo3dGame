@@ -8,6 +8,8 @@
 #include "../Helper/Vector.h"
 #include "World.h"
 
+#include <SFML/Audio.hpp>
+
 #include <thread>
 
 class Camera
@@ -19,6 +21,9 @@ private:
     float _sight;
     float _speed;
     float _maxDist;
+
+
+    sf::Sound walkSound;
 
     mutable std::vector<std::pair<std::string, Vector>> _collisionPoints;
     std::vector<std::thread> _threads;

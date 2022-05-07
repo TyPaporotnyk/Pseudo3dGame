@@ -7,7 +7,9 @@
 #include <iostream>
 #include <cmath>
 
-//#define MULTITHREADING
+#include "../../Precompiler.h"
+
+#define MULTITHREADING
 
 Camera::Camera(World& _world, Vector position, float speed, int raysNum, int sight, int angle, float maxDist) :
 _world(_world) ,_position(position), _speed(speed), _raysNum(raysNum), _sight(sight*M_PI/180), _angle(angle), _maxDist
@@ -15,6 +17,12 @@ _world(_world) ,_position(position), _speed(speed), _raysNum(raysNum), _sight(si
 {
     _collisionPoints.resize(raysNum);
     _depths.resize(raysNum);
+
+    walkSound.setBuffer(*RESOURCE_MANAGER.loadSound(std::string(DATA_DIR + std::string("/sound/walkSound.ogg"))));
+    walkSound.setLoop(true);
+    walkSound.setVolume(50.f);
+//    walkSound.setPitch(2);
+
     _threads = std::vector<std::thread>(std::thread::hardware_concurrency());
 }
 
@@ -25,6 +33,7 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
     {
         return;
     }
+
 
     float windowCenterX = round(window.getSize().x / 2);
     float windowCenterY = round(window.getSize().y / 2);
@@ -38,24 +47,40 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
     float dCos = cosf((360-_angle)*M_PI/180);
     float dSin = sinf((360-_angle)*M_PI/180);
 
+    float dX = 0;
+    float dY = 0;
+
     // Keyboard check
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-        _position.x += _speed * dCos * dTime;
-        _position.y += _speed * dSin * dTime;
+        dX += _speed * dCos * dTime;
+        dY += _speed * dSin * dTime;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-        _position.x -= dCos * _speed * dTime;
-        _position.y -= dSin * _speed * dTime;
+        dX -= dCos * _speed * dTime;
+        dY -= dSin * _speed * dTime;
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-        _position.x += dSin * _speed * dTime;
-        _position.y -= dCos * _speed * dTime;
+        dX += dSin * _speed * dTime;
+        dY -= dCos * _speed * dTime;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-        _position.x -= dSin * _speed * dTime;
-        _position.y += dCos * _speed * dTime;
+        dX -= dSin * _speed * dTime;
+        dY += dCos * _speed * dTime;
     }
+
+    if(dX != 0 || dY != 0)
+    {
+        if (walkSound.getStatus() != sf::Sound::Status::Playing)
+            walkSound.play();
+    }
+    else
+    {
+        walkSound.pause();
+    }
+
+    _position.x += dX;
+    _position.y += dY;
 
     // Crossing rays thread
 #ifdef MULTITHREADING

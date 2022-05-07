@@ -19,7 +19,7 @@ sf::Texture *Core::Managers::ResourceManager::ResourceManager::loadTexture(const
     return texture.get();
 }
 
-sf::Font *Core::Managers::ResourceManager::loadFont(const std::string &filename)
+sf::Font* Core::Managers::ResourceManager::loadFont(const std::string &filename)
 {
     auto it = _fonts.find(filename);
     if (it != _fonts.end())
@@ -34,9 +34,26 @@ sf::Font *Core::Managers::ResourceManager::loadFont(const std::string &filename)
     return font.get();
 }
 
+sf::SoundBuffer* Core::Managers::ResourceManager::loadSound(const std::string &filename)
+{
+    auto it = _sounds.find(filename);
+    if (it != _sounds.end())
+        return it->second.get();
+
+    std::shared_ptr<sf::SoundBuffer> soundBuffer(new sf::SoundBuffer);
+    if (!soundBuffer->loadFromFile(filename))
+        return nullptr;
+
+    _sounds.emplace(filename, soundBuffer);
+
+    return soundBuffer.get();
+}
+
 void Core::Managers::ResourceManager::initialize()
 {
 
 }
+
+
 
 

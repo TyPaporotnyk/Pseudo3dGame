@@ -13,7 +13,16 @@ World::World(const std::string& skyTexturePath,
              int windowWidth, int windowHeight) noexcept :
              _skyTexture(*RESOURCE_MANAGER.loadTexture(skyTexturePath)),
 //             floorTexture_(*ResourceManager::loadTexture(floorTexturePath)),
-             cellScale_(cellScale), _windowWidth(windowWidth), _windowHeight(windowHeight)  {}
+             cellScale_(cellScale), _windowWidth(windowWidth), _windowHeight(windowHeight)
+
+             {
+                backSound.setBuffer(*RESOURCE_MANAGER.loadSound(std::string(std::string(DATA_DIR + std::string
+                ("/sound/backSounds.ogg")))));
+                backSound.setLoop(true);
+                backSound.setVolume(20.f);
+
+                backSound.play();
+             }
 
 void World::drawMap(sf::RenderTarget& window) const noexcept
 {

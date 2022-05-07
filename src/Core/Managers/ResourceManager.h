@@ -6,6 +6,7 @@
 #define PSEUDO3DGAME_RESOURCEMANAGER_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -24,12 +25,14 @@ namespace Core::Managers
     private:
         std::map<std::string, std::shared_ptr<sf::Texture>> _textures;
         std::map<std::string, std::shared_ptr<sf::Font>> _fonts;
+        std::map<std::string, std::shared_ptr<sf::SoundBuffer>> _sounds;
 
     public:
         void initialize() override;
 
         sf::Texture* loadTexture(const std::string& filename);
         sf::Font* loadFont(const std::string& filename);
+        sf::SoundBuffer * loadSound(const std::string& filename);
     };
 }
 

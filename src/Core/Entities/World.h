@@ -7,6 +7,8 @@
 
 #include <vector>
 
+#include <SFML/Audio.hpp>
+
 #include "2DFigures/Object2D.h"
 
 #include "../Helper/Vector.h"
@@ -20,6 +22,8 @@ private:
 
     int _windowWidth;
     int _windowHeight;
+
+    sf::Sound backSound;
 
     int cellScale_;
 
