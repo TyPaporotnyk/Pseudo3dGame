@@ -31,7 +31,7 @@ private:
 
     World& _world;
 
-    void crossing()noexcept;
+    void crossing(float dX, float dY, float dTime)noexcept;
 
     static float degCheck(float deg) noexcept;
 

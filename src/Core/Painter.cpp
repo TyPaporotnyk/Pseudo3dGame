@@ -17,7 +17,7 @@ void Core::Painter::drawMap(sf::RenderTarget &window, const World &world)
 void Core::Painter::drawWorld(sf::RenderTarget &window, const Camera &camera, const World &world)
 {
     int segmentWidth = std::ceil(world.getWindowWidth() / camera.getRaysNum());
-    float segmentHeightProj = 6;
+    float segmentHeightProj = 10;
     float segmentHeight;
     sf::RectangleShape segment;
     sf::Sprite sprite;
