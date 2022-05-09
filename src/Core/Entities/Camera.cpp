@@ -18,10 +18,10 @@ _world(_world) ,_position(position), _speed(speed), _raysNum(raysNum), _sight(si
     _collisionPoints.resize(raysNum);
     _depths.resize(raysNum);
 
-    walkSound.setBuffer(*RESOURCE_MANAGER.loadSound(std::string(DATA_DIR + std::string("/sound/walkSound.ogg"))));
-    walkSound.setLoop(true);
-    walkSound.setVolume(50.f);
-//    walkSound.setPitch(2);
+    _walkSound.setBuffer(*RESOURCE_MANAGER.loadSound(std::string(DATA_DIR + std::string("/sound/steps.ogg"))));
+    _walkSound.setLoop(true);
+    _walkSound.setVolume(50.f);
+    _walkSound.setPitch(0.8);
 
     _threads = std::vector<std::thread>(std::thread::hardware_concurrency());
 }
@@ -70,12 +70,12 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
 
     if(dX != 0 || dY != 0)
     {
-        if (walkSound.getStatus() != sf::Sound::Status::Playing)
-            walkSound.play();
+        if (_walkSound.getStatus() != sf::Sound::Status::Playing)
+            _walkSound.play();
     }
     else
     {
-        walkSound.pause();
+        _walkSound.pause();
     }
 
     // Crossing rays by thread but without collisions
@@ -162,10 +162,11 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
 void Camera::crossing(float dX, float dY, float dTime)noexcept
 {
     float curAngle = ((360-_angle) * M_PI / 180) - _sight / 2;
+    float angle = (360-_angle) * M_PI / 180;
 
     Vector vector = {dX, dY};
 
-    for (float a = 0, dA = 0; a < _raysNum; a++)
+    for (float a = 0, dA = 0; a < _raysNum && dA < _raysNum; a++, dA++)
     {
         Vector direction = {cosf(curAngle), sinf(curAngle)};
         direction.normalize();
@@ -214,14 +215,14 @@ void Camera::crossing(float dX, float dY, float dTime)noexcept
                         Vector normal = {edge.y, -edge.x};
                         normal.normalize();
 
-                        Vector toWallVector = wallPoint1 + wallPoint2 - _position * 2;
+                        Vector toWallVector = wallPoint1 + wallPoint2 - _position*2;
 
                         if((normal * toWallVector).x > 0 && (normal * toWallVector).y > 0)
-                            normal = normal * (-1);
+                            normal = normal * -1;
 
                         float scalar = vector.x * normal.x + vector.y * normal.y;
 
-                        if (scalar < 0 && abs(u - abs(scalar)) < 0.3)
+                        if (scalar < 0 && abs(u - abs(scalar)) < 0.5)
                         {
                             vector.x -= normal.x * scalar;
                             vector.y -= normal.y * scalar;
@@ -235,6 +236,7 @@ void Camera::crossing(float dX, float dY, float dTime)noexcept
         _depths[a] = (bestLen * cosf(((360-_angle) * M_PI / 180) - curAngle));
 
         curAngle += _sight / _raysNum;
+        angle += M_PI * 2 / _raysNum;
     }
 
     _position += vector;

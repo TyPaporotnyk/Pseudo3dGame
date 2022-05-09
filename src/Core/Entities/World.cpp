@@ -16,12 +16,12 @@ World::World(const std::string& skyTexturePath,
              cellScale_(cellScale), _windowWidth(windowWidth), _windowHeight(windowHeight)
 
              {
-                backSound.setBuffer(*RESOURCE_MANAGER.loadSound(std::string(std::string(DATA_DIR + std::string
-                ("/sound/backSounds.ogg")))));
-                backSound.setLoop(true);
-                backSound.setVolume(20.f);
+                _backSound.setBuffer(*RESOURCE_MANAGER.loadSound(std::string(std::string(DATA_DIR + std::string
+                ("/sound/backgrounds/garden-background-7061.ogg")))));
+                _backSound.setLoop(true);
+                _backSound.setVolume(40.f);
 
-                backSound.play();
+                _backSound.play();
              }
 
 void World::drawMap(sf::RenderTarget& window) const noexcept

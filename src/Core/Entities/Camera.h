@@ -22,8 +22,10 @@ private:
     float _speed;
     float _maxDist;
 
+    bool texturing = true;
 
-    sf::Sound walkSound;
+
+    sf::Sound _walkSound;
 
     mutable std::vector<std::pair<std::string, Vector>> _collisionPoints;
     std::vector<std::thread> _threads;

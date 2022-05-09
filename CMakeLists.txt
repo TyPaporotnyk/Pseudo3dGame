@@ -35,7 +35,7 @@ add_executable(Pseudo3DGame
         src/Precompiler.cpp
         src/Precompiler.h
         src/Core/Helper/ConfigParser.cpp
-        src/Core/Helper/ConfigParser.h)
+        src/Core/Helper/ConfigParser.h src/Core/UI/Menu/Menu.cpp src/Core/UI/Menu/Menu.h)
 
 if(${APPLE})
 #    include_directories(/usr/local/include)

@@ -14,10 +14,10 @@ void Core::Painter::drawMap(sf::RenderTarget &window, const World &world)
         obj.second->draw(window, world.getCellScale());
 }
 
-void Core::Painter::drawWorld(sf::RenderTarget &window, const Camera &camera, const World &world)
+void Core::Painter::drawWorld(sf::RenderTarget &window, const Camera &camera, const World &world, bool texturing)
 {
     int segmentWidth = std::ceil(world.getWindowWidth() / camera.getRaysNum());
-    float segmentHeightProj = 10;
+    float segmentHeightProj = 6;
     float segmentHeight;
     sf::RectangleShape segment;
     sf::Sprite sprite;
@@ -78,13 +78,28 @@ void Core::Painter::drawWorld(sf::RenderTarget &window, const Camera &camera, co
             wallTextureColumn = rayEnd.x - std::floorf(rayEnd.x);
         }
 
-        sprite.setTextureRect(sf::IntRect((sprite.getTexture()->getSize().x-1) * wallTextureColumn,
-                                          0,world.getWindowWidth()/camera.getRaysNum(), sprite.getTexture()->getSize
-                        ().y-1));
-        sprite.setScale(1,segmentHeight/sprite.getTexture()->getSize().y);
-        sprite.setPosition(i*segmentWidth, world.getWindowHeight()/2 - segmentHeight/2);
+        if(texturing)
+        {
 
-        window.draw(sprite);
+            sprite.setTextureRect(sf::IntRect((sprite.getTexture()->getSize().x - 1) * wallTextureColumn,
+                                              0, world.getWindowWidth() / camera.getRaysNum(),
+                                              sprite.getTexture()->getSize
+                                                      ().y - 1));
+            sprite.setColor(sf::Color(255 - 100/camera.getMaxDist()*camera.getDepths()[i],255 - 100/camera.getMaxDist()
+            *camera.getDepths()[i],255 - 100/camera.getMaxDist()*camera.getDepths()[i]));
+            sprite.setScale(1, segmentHeight / sprite.getTexture()->getSize().y);
+            sprite.setPosition(i * segmentWidth, world.getWindowHeight() / 2 - segmentHeight / 2);
+
+            window.draw(sprite);
+        }
+        else
+        {
+            sf::RectangleShape rectangle;
+            rectangle.setSize({static_cast<float>(segmentWidth), static_cast<float>(segmentHeight)});
+            rectangle.setPosition(i * segmentWidth, world.getWindowHeight() / 2 - segmentHeight / 2);
+            window.draw(rectangle);
+        }
+
         i++;
     }
 }

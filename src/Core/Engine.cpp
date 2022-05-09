@@ -86,7 +86,7 @@ Engine::Engine()
     isPaused = false;
 
     text.setFont(*RESOURCE_MANAGER.loadFont(std::string(DATA_DIR + std::string("/font/font.ttf"))));
-    text.setPosition(world->getCellScale(),(20*world->getCellScale())+world->getCellScale());
+    text.setPosition(world->getCellScale(),/*(20*world->getCellScale())+*/world->getCellScale());
     text.setCharacterSize(24);
 }
 
@@ -145,8 +145,8 @@ void Engine::render()
     window->clear();
 
     Core::Painter::drawWorld(*window, *camera, *world);
-    Core::Painter::drawSight(*window, *camera, *world);
-    Core::Painter::drawMap(*window, *world);
+//    Core::Painter::drawSight(*window, *camera, *world);
+//    Core::Painter::drawMap(*window, *world);
 
     renderText();
 

@@ -23,7 +23,7 @@ private:
     int _windowWidth;
     int _windowHeight;
 
-    sf::Sound backSound;
+    sf::Sound _backSound;
 
     int cellScale_;
 
