@@ -10,6 +10,7 @@
 #include "../../Precompiler.h"
 
 //#define MULTITHREADING
+#define COLLISIONS
 
 Camera::Camera(World& _world, Vector position, float speed, int raysNum, int sight, int angle, float maxDist) :
 _world(_world) ,_position(position), _speed(speed), _raysNum(raysNum), _sight(sight*M_PI/180), _angle(angle), _maxDist
@@ -49,6 +50,13 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
     float dX = 0;
     float dY = 0;
 
+    float shiftSpeed = 1.0;
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+    {
+        shiftSpeed = 1.75;
+    }
+
     // Keyboard check
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
         dX += dCos;
@@ -71,7 +79,10 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
     if(dX != 0 || dY != 0)
     {
         if (_walkSound.getStatus() != sf::Sound::Status::Playing)
+        {
+            _walkSound.setPitch(0.8);
             _walkSound.play();
+        }
     }
     else
     {
@@ -80,7 +91,6 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
 
     // Crossing rays by thread but without collisions
 #ifdef MULTITHREADING
-
     for(unsigned int i = 0; i < _threads.size(); i++)
     {
         _threads[i] = std::thread([this](int raysNum, float sightStart, int b) noexcept
@@ -152,14 +162,22 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
     _position.x += dX * _speed * dTime;
     _position.y += dY * _speed * dTime;
 #endif
-
     // Crossing rays without thread
 #ifndef MULTITHREADING
-    crossing(dX * _speed * dTime, dY * _speed * dTime, dTime);
+    crossing(dX * _speed * shiftSpeed * dTime, dY * _speed * shiftSpeed * dTime, dTime);
 #endif
 }
 
 void Camera::crossing(float dX, float dY, float dTime)noexcept
+{
+    Vector vector = {dX, dY};
+
+    cross(dX, dY);
+
+    _position += vector;
+}
+
+void Camera::cross(float dX, float dY) noexcept
 {
     float curAngle = ((360-_angle) * M_PI / 180) - _sight / 2;
     float angle = (360-_angle) * M_PI / 180;
@@ -211,6 +229,7 @@ void Camera::crossing(float dX, float dY, float dTime)noexcept
                                      static_cast<float>(rayStart.y + bestLen * (rayDir.y - rayStart.y))};
                         bestPointName = object.first;
 
+#ifdef COLLISIONS
                         Vector edge = wallPoint2 - wallPoint1;
                         Vector normal = {edge.y, -edge.x};
                         normal.normalize();
@@ -227,6 +246,10 @@ void Camera::crossing(float dX, float dY, float dTime)noexcept
                             vector.x -= normal.x * scalar;
                             vector.y -= normal.y * scalar;
                         }
+#endif
+#ifndef COLLISIONS
+                        vector = {dX,dY};
+#endif
                     }
                 }
 
@@ -238,70 +261,7 @@ void Camera::crossing(float dX, float dY, float dTime)noexcept
         curAngle += _sight / _raysNum;
         angle += M_PI * 2 / _raysNum;
     }
-
-    _position += vector;
 }
-
-void Camera::process(int raysNum, float sightStart, int b) noexcept
-{
-    float curAngle = (((360-_angle) * M_PI / 180) - _sight / 2) + sightStart;
-
-    for (float a = 0; a < raysNum; a++)
-    {
-        Vector direction = {cosf(curAngle), sinf(curAngle)};
-        direction.normalize();
-
-        float bestLen = _maxDist;
-        std::string bestPointName;
-        Vector bestPoint = {(_position.x  + direction.x  * bestLen),
-                            (_position.y + direction.y * bestLen)};
-
-        for(auto& object : _world.getObjects())
-        {
-            for(int i = 0; i < object.second->getNodes().size(); i++)
-            {
-                int x1 = i % object.second->getNodes().size();
-                int x2 = (i + 1) % object.second->getNodes().size();
-
-                Vector wallPoint1 = object.second->getNodes()[x1];
-                Vector wallPoint2 = object.second->getNodes()[x2];
-
-                Vector rayStart = _position;
-                Vector rayDir = rayStart + direction;
-
-                float den = (wallPoint1.x - wallPoint2.x) * (rayStart.y - rayDir.y) -
-                            (wallPoint1.y - wallPoint2.y) * (rayStart.x - rayDir.x);
-
-                if (den == 0)
-                {
-                    continue;
-                }
-
-                float t = ((wallPoint1.x - rayStart.x) * (rayStart.y - rayDir.y) -
-                           (wallPoint1.y - rayStart.y) * (rayStart.x - rayDir.x)) / den;
-                float u = -((wallPoint1.x - wallPoint2.x) * (wallPoint1.y - rayStart.y) -
-                            (wallPoint1.y - wallPoint2.y) * (wallPoint1.x - rayStart.x)) / den;
-
-                if (t >= 0 && t <= 1 && u >= 0 )
-                {
-                    if (u < bestLen)
-                    {
-                        bestLen = u;
-
-                        bestPoint = {static_cast<float>(rayStart.x + bestLen * (rayDir.x - rayStart.x)),
-                                     static_cast<float>(rayStart.y + bestLen * (rayDir.y - rayStart.y))};
-                        bestPointName = object.first;
-                    }
-                }
-            }
-        }
-        _collisionPoints[b+a] = {bestPointName, bestPoint};
-        _depths[b+a] = (bestLen * cosf(((360-_angle) * M_PI / 180) - curAngle));
-
-        curAngle += _sight / _raysNum;
-    }
-}
-
 
 Vector Camera::getPosition() const
 {

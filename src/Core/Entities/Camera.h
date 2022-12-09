@@ -34,7 +34,7 @@ private:
     World& _world;
 
     void crossing(float dX, float dY, float dTime)noexcept;
-    void process(int raysNum, float sightStart, int b) noexcept;
+    void cross(float dX, float dY)noexcept;
 
     static float degCheck(float deg) noexcept;
 
