@@ -20,7 +20,7 @@ namespace Core
         static void drawMap(sf::RenderTarget& window, const World& world);
 
         static void drawWorld(sf::RenderTarget &window, const Camera &camera, const World &world, bool texturing =
-                true);
+                false);
 
         static void drawSight(sf::RenderTarget& window, const Camera& camera, const World& world);
     };

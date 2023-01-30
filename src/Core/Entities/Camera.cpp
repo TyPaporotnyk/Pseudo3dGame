@@ -10,7 +10,7 @@
 #include "../../Precompiler.h"
 
 //#define MULTITHREADING
-#define COLLISIONS
+//#define COLLISIONS
 
 Camera::Camera(World& _world, Vector position, float speed, int raysNum, int sight, int angle, float maxDist) :
 _world(_world) ,_position(position), _speed(speed), _raysNum(raysNum), _sight(sight*M_PI/180), _angle(angle), _maxDist
@@ -38,9 +38,9 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
     float windowCenterX = round(window.getSize().x / 2);
     float windowCenterY = round(window.getSize().y / 2);
 
-    float rotationHorizontal = round(90 * (windowCenterX - sf::Mouse::getPosition(window).x) / window.getSize().x);
+    float rotationHorizontal = 120 * (windowCenterX - sf::Mouse::getPosition(window).x) / window.getSize().x;
 
-    _angle = degCheck(_angle + rotationHorizontal);
+    _angle = degCheck(round(_angle + rotationHorizontal));
 
     sf::Mouse::setPosition(sf::Vector2i(windowCenterX, windowCenterY), window);
 
@@ -194,7 +194,6 @@ std::vector<std::pair<std::string, std::shared_ptr<Object2D>>> Camera::getObject
             objectsInView.push_back({object.first, object.second});
         }
     }
-    std::cout << "Object len: " << objectsInView.size() << std::endl;
     return objectsInView;
 }
 
@@ -213,9 +212,9 @@ void Camera::cross(float dX, float dY) noexcept
     float angle = (360-_angle) * M_PI / 180;
 
     Vector vector = {dX, dY};
-    std::vector<std::pair<std::string, std::shared_ptr<Object2D>>> objects = getObjectsInView();
+    auto objects = getObjectsInView();
 
-    for (float a = 0, dA = 0; a < _raysNum && dA < _raysNum; a++, dA++)
+    for (int a = 0, dA = 0; a < _raysNum && dA < _raysNum; a++, dA++)
     {
         Vector direction = {cosf(curAngle), sinf(curAngle)};
         direction.normalize();
