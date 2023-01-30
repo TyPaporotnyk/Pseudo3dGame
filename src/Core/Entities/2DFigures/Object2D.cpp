@@ -31,6 +31,8 @@ void Object2D::draw(sf::RenderTarget &window, int cellScale) const
     window.draw(figure);
 }
 
+float getCenter();
+
 const std::vector<Vector> & Object2D::getNodes() const
 {
     return _points;

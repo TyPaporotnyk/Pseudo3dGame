@@ -168,6 +168,36 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
 #endif
 }
 
+std::vector<std::pair<std::string, std::shared_ptr<Object2D>>> Camera::getObjectsInView()
+{
+    std::vector<std::pair<std::string, std::shared_ptr<Object2D>>> objectsInView;
+    Vector direction = { cosf((360-_angle)*M_PI/180), sinf((360-_angle)*M_PI/180) };
+    direction.normalize();
+
+    for(auto& object : _world.getObjects())
+    {
+        bool inView = false;
+        for(Vector node : object.second->getNodes())
+        {
+            Vector vectorToNode = node - _position;
+            vectorToNode.normalize();
+            float angle = acos(direction.x * vectorToNode.x + direction.y * vectorToNode.y);
+            if(angle <= _sight/2)
+            {
+                inView = true;
+                break;
+            }
+        }
+
+        if(inView)
+        {
+            objectsInView.push_back({object.first, object.second});
+        }
+    }
+    std::cout << "Object len: " << objectsInView.size() << std::endl;
+    return objectsInView;
+}
+
 void Camera::crossing(float dX, float dY, float dTime)noexcept
 {
     Vector vector = {dX, dY};
@@ -183,6 +213,7 @@ void Camera::cross(float dX, float dY) noexcept
     float angle = (360-_angle) * M_PI / 180;
 
     Vector vector = {dX, dY};
+    std::vector<std::pair<std::string, std::shared_ptr<Object2D>>> objects = getObjectsInView();
 
     for (float a = 0, dA = 0; a < _raysNum && dA < _raysNum; a++, dA++)
     {
@@ -193,8 +224,9 @@ void Camera::cross(float dX, float dY) noexcept
         std::string bestPointName;
         Vector bestPoint = {(_position.x  + direction.x  * bestLen), (_position.y + direction.y * bestLen)};
 
-        for(auto& object : _world.getObjects())
+        for(auto& object : objects)
         {
+
             for(int i = 0; i < object.second->getNodes().size(); i++)
             {
                 int x1 = i % object.second->getNodes().size();

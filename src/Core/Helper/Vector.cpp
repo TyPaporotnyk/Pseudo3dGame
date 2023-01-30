@@ -70,14 +70,14 @@ float Vector::length(Vector v1, Vector v2)
     return sqrt(pow(v2.x - v1.x,2) + pow(v2.y - v1.y,2));
 }
 
-float Vector::abs() const
+float Vector::abs(Vector v1, Vector v2)
 {
-    return sqrt(x*x + y*y);
+    return sqrt(v1.x*v2.x + v1.y*v2.y);
 }
 
 void Vector::normalize()
 {
-    float len = abs();
+    float len = abs({x,y}, {x,y});
     x /= len;
     y /= len;
 }

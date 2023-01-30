@@ -7,10 +7,12 @@
 
 #include "../Helper/Vector.h"
 #include "World.h"
+#include "2DFigures/Object2D.h"
 
 #include <SFML/Audio.hpp>
 
 #include <thread>
+#include <vector>
 
 class Camera
 {
@@ -43,6 +45,7 @@ public:
     maxDist = 25);
 
     void control(const sf::RenderWindow& window,float dTime, bool cameraPause) noexcept;
+    std::vector<std::pair<std::string, std::shared_ptr<Object2D>>> getObjectsInView();
 
     [[nodiscard]]int getAngle() const;
     [[nodiscard]]float getSpeed() const;
