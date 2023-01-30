@@ -20,12 +20,12 @@ void Loaders::WorldLoader::loadMap(World &world, const std::string &path)
     int cell_height = mapImage.getSize().y;
     int cell_width = mapImage.getSize().x;
 
-    world.addObject(std::shared_ptr<Object2D> (new Object2D(std::to_string(0) + ":" + std::to_string(0) + "-Cube",
-                                                            *RESOURCE_MANAGER.loadTexture(
-                                                                    std::string(DATA_DIR +
-                                                                                std::string("/texture/walls/bricks.png"))),
-                                                                                Entities::CUBE,
-                                                            {0,0},{{0,0},{0,19},{19,19},{19,0}})));
+//    world.addObject(std::shared_ptr<Object2D> (new Object2D(std::to_string(0) + ":" + std::to_string(0) + "-Cube",
+//                                                            *RESOURCE_MANAGER.loadTexture(
+//                                                                    std::string(DATA_DIR +
+//                                                                                std::string("/texture/walls/bricks.png"))),
+//                                                                                Entities::CUBE,
+//                                                            {0,0},{{0,0},{0,19},{19,19},{19,0}})));
 
     for (size_t i = 1; i < cell_width-1; i++)
     {

@@ -45,6 +45,7 @@ public:
 
 //    [[nodiscard]]const std::vector<Vector> &getPoints() const;
     [[nodiscard]] const Vector& getPosition() const;
+    float getCenter();
 };
 
 

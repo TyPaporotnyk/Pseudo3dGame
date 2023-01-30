@@ -85,8 +85,9 @@ void Core::Painter::drawWorld(sf::RenderTarget &window, const Camera &camera, co
                                               0, world.getWindowWidth() / camera.getRaysNum(),
                                               sprite.getTexture()->getSize
                                                       ().y - 1));
-            sprite.setColor(sf::Color(255 - 100/camera.getMaxDist()*camera.getDepths()[i],255 - 100/camera.getMaxDist()
-            *camera.getDepths()[i],255 - 100/camera.getMaxDist()*camera.getDepths()[i]));
+            sprite.setColor(sf::Color(255 - 100/camera.getMaxDist()*camera.getDepths()[i],
+                                      255 - 100/camera.getMaxDist()*camera.getDepths()[i],
+                                      255 - 100/camera.getMaxDist()*camera.getDepths()[i]));
             sprite.setScale(1, segmentHeight / sprite.getTexture()->getSize().y);
             sprite.setPosition(i * segmentWidth, world.getWindowHeight() / 2 - segmentHeight / 2);
 
@@ -97,6 +98,10 @@ void Core::Painter::drawWorld(sf::RenderTarget &window, const Camera &camera, co
             sf::RectangleShape rectangle;
             rectangle.setSize({static_cast<float>(segmentWidth), static_cast<float>(segmentHeight)});
             rectangle.setPosition(i * segmentWidth, world.getWindowHeight() / 2 - segmentHeight / 2);
+            rectangle.setFillColor(sf::Color(50 - 50/camera.getMaxDist()*camera.getDepths()[i],
+                                             181 - 181/camera.getMaxDist()*camera.getDepths()[i],
+                                             217 - 217/camera.getMaxDist()*camera.getDepths()[i]));
+//                                             255 - 100/camera.getMaxDist()*camera.getDepths()[i]));
             window.draw(rectangle);
         }
 
@@ -129,31 +134,31 @@ void Core::Painter::drawSight(sf::RenderTarget &window, const Camera &camera, co
     ray[0].color = sf::Color(0,255,0);
     ray[1].color = sf::Color(0,255,0);
 
-//    sf::ConvexShape triangle;
-//
-//    int size = camera.getCollisionPoints().size() / (camera.getCollisionPoints().size() / 100);
-//
-//    triangle.setPointCount(size+2);
-//    triangle.setPoint(0, {(camera.getPosition().x * world.getCellScale() + world.getCellScale()/3),
-//                          (camera.getPosition().y * world.getCellScale() + world.getCellScale()/3)});
-//
-//    int j = 0;
-//    for(int i = 0; i < camera.getCollisionPoints().size(); i+=camera.getCollisionPoints().size() / 100)
-//    {
-//        triangle.setPoint(j+1, {camera.getCollisionPoints()[i].second.x * world.getCellScale(),
-//                                camera.getCollisionPoints()[i].second.y * world.getCellScale()});
-//        j++;
-//    }
-//    triangle.setPoint(size+1,
-//                      {(camera.getPosition().x * world.getCellScale() + world.getCellScale()/3),
-//                       (camera.getPosition().y * world.getCellScale() + world.getCellScale()/3)});
-//
-//    triangle.setFillColor(sf::Color(0,0,0,0));
-//    triangle.setOutlineColor(sf::Color::White);
-//    triangle.setOutlineThickness(3);
+    sf::ConvexShape triangle;
+
+    int size = camera.getCollisionPoints().size() / (camera.getCollisionPoints().size() / 100);
+
+    triangle.setPointCount(size+2);
+    triangle.setPoint(0, {(camera.getPosition().x * world.getCellScale() + world.getCellScale()/3),
+                          (camera.getPosition().y * world.getCellScale() + world.getCellScale()/3)});
+
+    int j = 0;
+    for(int i = 0; i < camera.getCollisionPoints().size(); i+=camera.getCollisionPoints().size() / 100)
+    {
+        triangle.setPoint(j+1, {camera.getCollisionPoints()[i].second.x * world.getCellScale(),
+                                camera.getCollisionPoints()[i].second.y * world.getCellScale()});
+        j++;
+    }
+    triangle.setPoint(size+1,
+                      {(camera.getPosition().x * world.getCellScale() + world.getCellScale()/3),
+                       (camera.getPosition().y * world.getCellScale() + world.getCellScale()/3)});
+
+    triangle.setFillColor(sf::Color(0,0,0,0));
+    triangle.setOutlineColor(sf::Color::White);
+    triangle.setOutlineThickness(3);
 
     window.draw(field);
-//    window.draw(triangle);
+    window.draw(triangle);
     window.draw(ray, 2, sf::LinesStrip);
     window.draw(circle);
 }
