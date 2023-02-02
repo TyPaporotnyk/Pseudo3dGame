@@ -106,7 +106,6 @@ void Engine::run()
 {
     while(window->isOpen())
     {
-        updateDTime();
         update();
         render();
     }
@@ -135,6 +134,7 @@ void Engine::updateEvent()
 
 void Engine::update()
 {
+    updateDTime();
     updateEvent();
 
     camera->control(*window, deltaTime, isPaused);
@@ -145,8 +145,8 @@ void Engine::render()
     window->clear();
 
     Core::Painter::drawWorld(*window, *camera, *world);
-    Core::Painter::drawSight(*window, *camera, *world);
-    Core::Painter::drawMap(*window, *world);
+//    Core::Painter::drawSight(*window, *camera, *world);
+//    Core::Painter::drawMap(*window, *world);
 
     renderText();
 

@@ -14,6 +14,14 @@
 #include <thread>
 #include <vector>
 
+struct Point
+{
+    std::string name;
+    float depth;
+    Vector position;
+    int rayNum;
+};
+
 class Camera
 {
 private:
@@ -29,32 +37,42 @@ private:
 
     sf::Sound _walkSound;
 
-    mutable std::vector<std::pair<std::string, Vector>> _collisionPoints;
+    mutable std::vector<Point> _collisionPoints;
     std::vector<std::thread> _threads;
     mutable std::vector<float> _depths;
 
-    World& _world;
+    World &_world;
 
-    void crossing(float dX, float dY, float dTime)noexcept;
-    void cross(float dX, float dY)noexcept;
+    std::vector<std::pair<std::string, std::shared_ptr<Object2D>>> getObjectsInView(Vector direction);
+
+    void crossing(float dX, float dY, float dTime) noexcept;
+
+    Point cross(Vector direction, Vector point1, Vector point2) noexcept;
+
+    Vector collision(Vector &moveTo, Vector point1, Vector point2, float depth) noexcept;
 
     static float degCheck(float deg) noexcept;
 
 public:
-    explicit Camera(World& world,Vector position, float speed, int raysNum, int sight, int angle = 0, float
+    explicit Camera(World &world, Vector position, float speed, int raysNum, int sight, int angle = 0, float
     maxDist = 25);
 
-    void control(const sf::RenderWindow& window,float dTime, bool cameraPause) noexcept;
-    std::vector<std::pair<std::string, std::shared_ptr<Object2D>>> getObjectsInView();
+    void control(const sf::RenderWindow &window, float dTime, bool cameraPause) noexcept;
 
     [[nodiscard]]int getAngle() const;
+
     [[nodiscard]]float getSpeed() const;
+
     [[nodiscard]]float getMaxDist() const;
+
     [[nodiscard]]Vector getPosition() const;
+
     [[nodiscard]]int getRaysNum() const;
+
     [[nodiscard]]float getSight() const;
 
-    [[nodiscard]]const std::vector<std::pair<std::string, Vector>> &getCollisionPoints() const;
+    [[nodiscard]]const std::vector<Point> &getCollisionPoints() const;
+
     [[nodiscard]]const std::vector<float> &getDepths() const;
 
 };

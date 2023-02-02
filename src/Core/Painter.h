@@ -17,12 +17,13 @@ namespace Core
     struct Painter// : public Helper::Holders::Singleton<Drawer>
     {
         Painter() = delete;
-        static void drawMap(sf::RenderTarget& window, const World& world);
+
+        static void drawMap(sf::RenderTarget &window, const World &world);
 
         static void drawWorld(sf::RenderTarget &window, const Camera &camera, const World &world, bool texturing =
-                false);
+        true);
 
-        static void drawSight(sf::RenderTarget& window, const Camera& camera, const World& world);
+        [[deprecated]] static void drawSight(sf::RenderTarget &window, const Camera &camera, const World &world);
     };
 }
 
