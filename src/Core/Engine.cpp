@@ -13,7 +13,8 @@
 void Engine::initWindow()
 {
     std::string title = "None";
-    sf::VideoMode window_bounds(1280,720);
+    sf::VideoMode window_bounds(sf::Vector2u(1280, 720));
+
     unsigned frame_limit = 60;
     bool vertical_sync_enabled = false;
 

@@ -20,7 +20,7 @@ _world(_world) ,_position(position), _speed(speed), _raysNum(raysNum), _sight(si
     _depths.resize(raysNum);
 
     _walkSound.setBuffer(*RESOURCE_MANAGER.loadSound(std::string(DATA_DIR + std::string("/sound/steps.ogg"))));
-    _walkSound.setLoop(true);
+    _walkSound.setLooping(true);
     _walkSound.setVolume(50.f);
     _walkSound.setPitch(0.8);
 
@@ -52,7 +52,7 @@ void Camera::control(const sf::RenderWindow& window, float dTime, bool cameraPau
 
     float shiftSpeed = 1.0;
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
     {
         shiftSpeed = 1.75;
     }
@@ -191,7 +191,7 @@ std::vector<std::pair<std::string, std::shared_ptr<Object2D>>> Camera::getObject
 
         if(inView)
         {
-            objectsInView.push_back({object.first, object.second});
+            objectsInView.emplace_back(std::vector(std::pair(object.first, object.second));
         }
     }
     return objectsInView;

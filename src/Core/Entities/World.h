@@ -6,6 +6,7 @@
 #define PSEUDO3DGAME_WORLD_H
 
 #include <vector>
+#include <map>
 
 #include <SFML/Audio.hpp>
 
